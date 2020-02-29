@@ -148,7 +148,8 @@ test("Overriding the static property new doesn't clobber Function::new", () => {
 
   Function.prototype.new = function () { return new (this)(...arguments); };
 
-  ok((TwoClass.new('three')).name === 'three');
+  // https://github.com/decaffeinate/decaffeinate/blob/master/docs/correctness-issues.md#static-property-inheritance-is-implemented-differently
+  // ok((TwoClass.new('three')).name === 'three');
   ok((new OneClass()).function === 'function');
   ok(OneClass.new === 'new');
 
@@ -618,7 +619,8 @@ test('variables in constructor bodies are correctly scoped', () => {
 
   const a = new A();
   eq(a.captured().x, 10);
-  return eq(a.captured().y, 2);
+  // https://github.com/decaffeinate/decaffeinate/blob/master/docs/correctness-issues.md#executable-class-bodies-can-have-their-statements-reordered
+  return eq(a.captured().y, 20);
 });
 
 
@@ -679,7 +681,8 @@ test('ensure that constructors invoked with splats return a new object', () => {
   // Ensure that constructors invoked with splats cache the function.
   let called = 0;
   const get = function () { if (called++) { return false; } return (Type = class Type {}); };
-  return new get()(...Array.from(args || []));
+  // https://github.com/decaffeinate/decaffeinate/blob/master/docs/correctness-issues.md#classes-cannot-be-called-without-new
+  return new (get())(...Array.from(args || []));
 });
 
 test("`new` shouldn't add extra parens", () => ok(new Date().constructor === Date));
@@ -1132,7 +1135,8 @@ test('#2599: other typed constructors should be inherited', () => {
   return ok(!((new Base()) instanceof Base));
 });
 
-test('#2359: extending native objects that use other typed constructors requires defining a constructor', () => {
+// https://github.com/decaffeinate/decaffeinate/blob/master/docs/correctness-issues.md#subclassing-built-ins-is-allowed-in-different-situations
+skippedTest('#2359: extending native objects that use other typed constructors requires defining a constructor', () => {
   class BrokenArray extends Array {
     method() { return 'no one will call me'; }
   }

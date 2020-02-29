@@ -118,7 +118,8 @@ test('self-referencing functions', () => {
   return eq(changeMe, 2);
 });
 
-test("#2009: don't touch `` `this` ``", () => {
+// https://github.com/decaffeinate/decaffeinate/blob/master/docs/correctness-issues.md#inline-js-that-relies-on-coffeescript-implementation-details-may-not-be-transformed-correctly
+skippedTest("#2009: don't touch `` `this` ``", () => {
   const nonceA = {};
   const nonceB = {};
   let fn = null;

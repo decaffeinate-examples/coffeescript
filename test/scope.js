@@ -119,19 +119,19 @@ test('loop variable should be accessible after for-from loop', () => {
   })());
   return eq(x, 2);
 });
-
-class Array {
+// https://github.com/decaffeinate/decaffeinate/blob/master/docs/correctness-issues.md#globals-like-object-and-array-may-be-accessed-by-name-from-generated-code
+class Array_ {
   static initClass() {
     this.prototype.slice = fail;
   }
 }
-Array.initClass(); // needs to be global
-class Object {
+Array_.initClass(); // needs to be global
+class Object_ {
   static initClass() {
     this.prototype.hasOwnProperty = fail;
   }
 }
-Object.initClass();
+Object_.initClass();
 test("#1973: redefining Array/Object constructors shouldn't confuse __X helpers", () => {
   const arr = [1, 2, 3, 4];
   arrayEq([3, 4], arr.slice(2));

@@ -449,6 +449,8 @@ task('bench', 'quick benchmark of compilation time', () => {
 // Run the CoffeeScript test suite.
 var runTests = function (CoffeeScript) {
   CoffeeScript.register();
+  require('babel-register');
+  require('babel-polyfill');
   const startTime = Date.now();
   let currentFile = null;
   let passedTests = 0;
@@ -501,14 +503,14 @@ var runTests = function (CoffeeScript) {
   const files = fs.readdirSync('test');
 
   for (const file of Array.from(files)) {
-    if (helpers.isCoffee(file)) {
+    if (file.endsWith('.js')) {
       var filename;
 
       const literate = helpers.isLiterate(file);
       currentFile = (filename = path.join('test', file));
       const code = fs.readFileSync(filename);
       try {
-        CoffeeScript.run(code.toString(), { filename, literate });
+        require(`./${filename}`);
       } catch (error1) {
         const error = error1;
         failures.push({ filename, error });

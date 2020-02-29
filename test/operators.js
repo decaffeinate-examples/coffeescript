@@ -267,7 +267,8 @@ test('#1100: precedence in or-test compilation of `in`', () => {
   return ok(!([1, 0 || 1].includes(0)));
 });
 
-test('#1630: `in` should check `hasOwnProperty`', () => {
+// https://github.com/decaffeinate/decaffeinate/blob/master/docs/correctness-issues.md#undefined-in-arr-returns-true-for-sparse-arrays-without-explicit-undefineds
+skippedTest('#1630: `in` should check `hasOwnProperty`', () => {
   let needle;
   return ok((needle = undefined, !Array.from({ length: 1 }).includes(needle)));
 });
@@ -469,7 +470,8 @@ test('#3363: Modulo operator coercing order', () => {
   return eq(5, count);
 });
 
-test('#3598: Unary + and - coerce the operand once when it is an identifier', () => {
+// https://github.com/decaffeinate/decaffeinate/blob/master/docs/correctness-issues.md#side-effects-in-valueof-and-getters-may-be-called-multiple-times
+skippedTest('#3598: Unary + and - coerce the operand once when it is an identifier', () => {
   // Unary + and - do not generate `_ref`s when the operand is a number, for
   // readability. To make sure that they do when the operand is an identifier,
   // test that they are consistent with another unary operator as well as another

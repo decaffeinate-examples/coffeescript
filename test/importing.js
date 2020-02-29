@@ -33,7 +33,8 @@ if ((typeof window === 'undefined' || window === null) && (typeof testingBrowser
     } else {
       global[magicKey] = {};
       if ((typeof require !== 'undefined' && require !== null ? require.extensions : undefined) != null) {
-        ok(require(__filename).method() === magicValue);
+        const requireUncached = require('require-uncached');
+        ok(requireUncached(__filename).method() === magicValue);
       }
       return delete global[magicKey];
     }

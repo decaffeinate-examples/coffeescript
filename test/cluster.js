@@ -12,6 +12,10 @@
 
 if (typeof testingBrowser !== 'undefined' && testingBrowser !== null) { return; }
 
+// CoffeeScript overwrites process.argv, which this test depends on, so manually
+// overwrite it instead.
+process.argv[1] = __filename;
+
 const cluster = require('cluster');
 
 if (cluster.isMaster) {

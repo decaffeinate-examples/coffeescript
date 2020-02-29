@@ -73,7 +73,7 @@ if (typeof require !== 'undefined' && require !== null) {
 
   test('patchStackTrace line patching', () => {
     const err = new Error('error');
-    return ok(err.stack.match(/test[\/\\]error_messages\.coffee:\d+:\d+\b/));
+    return ok(err.stack.match(/test[\/\\]error_messages\.js:\d+:\d+\b/));
   });
 
   test('patchStackTrace stack prelude consistent with V8', () => {
