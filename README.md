@@ -1,57 +1,27 @@
-            {
-         }   }   {
-        {   {  }  }
-         }   }{  {
-        {  }{  }  }                    _____       __  __
-       { }{ }{  { }                   / ____|     / _|/ _|
-     .- { { }  { }} -.               | |     ___ | |_| |_ ___  ___
-    (  { } { } { } }  )              | |    / _ \|  _|  _/ _ \/ _ \
-    |`-..________ ..-'|              | |___| (_) | | | ||  __/  __/
-    |                 |               \_____\___/|_| |_| \___|\___|
-    |                 ;--.
-    |                (__  \            _____           _       _
-    |                 | )  )          / ____|         (_)     | |
-    |                 |/  /          | (___   ___ _ __ _ _ __ | |_
-    |                 (  /            \___ \ / __| '__| | '_ \| __|
-    |                 |/              ____) | (__| |  | | |_) | |_
-    |                 |              |_____/ \___|_|  |_| .__/ \__|
-     `-.._________..-'                                  | |
-                                                        |_|
+# decaffeinate fork of coffeescript
 
-CoffeeScript is a little language that compiles into JavaScript.
+![Conversion Status](https://decaffeinate-examples.github.io/coffeescript/conversion-status.svg)
+![Test Status](https://decaffeinate-examples.github.io/coffeescript/test-status.svg)
 
-## Installation
+[Travis logs](https://travis-ci.org/decaffeinate/decaffeinate-example-builder/jobs/656534967)
 
-Once you have Node.js installed:
+## Conversion results
 
-```shell
-npm install --global coffeescript
-```
 
-Leave off the `--global` if you don’t wish to install globally.
+There were 1 errors out of
+55 total files.
 
-## Getting Started
+For more details on the errors, view the [error logs](./decaffeinate-errors.log)
 
-Execute a script:
 
-```shell
-coffee /path/to/script.coffee
-```
+## Test results
 
-Compile a script:
+Some tests failed.
 
-```shell
-coffee -c /path/to/script.coffee
-```
+## About this repository
 
-For documentation, usage, and examples, see: http://coffeescript.org/
+This repository was generated automatically by the [decaffeinate-examples]
+project using the [decaffeinate] tool.
 
-To suggest a feature or report a bug: https://github.com/jashkenas/coffeescript/issues
-
-If you’d like to chat, drop by #coffeescript on Freenode IRC.
-
-The source repository: https://github.com/jashkenas/coffeescript.git
-
-Changelog: http://coffeescript.org/#changelog
-
-Our lovely and talented contributors are listed here: https://github.com/jashkenas/coffeescript/contributors
+[decaffeinate-examples]: https://github.com/decaffeinate/decaffeinate-examples
+[decaffeinate]: https://github.com/decaffeinate/decaffeinate
