@@ -1,3 +1,32 @@
+/* eslint-disable
+    camelcase,
+    class-methods-use-this,
+    consistent-return,
+    default-case,
+    func-names,
+    guard-for-in,
+    implicit-arrow-linebreak,
+    max-len,
+    no-cond-assign,
+    no-constant-condition,
+    no-continue,
+    no-multi-assign,
+    no-multi-str,
+    no-param-reassign,
+    no-plusplus,
+    no-restricted-syntax,
+    no-return-assign,
+    no-shadow,
+    no-unused-expressions,
+    no-unused-vars,
+    no-use-before-define,
+    no-var,
+    prefer-const,
+    prefer-destructuring,
+    vars-on-top,
+*/
+// TODO: This file was created by bulk-decaffeinate.
+// Fix any style issues and re-enable lint.
 /*
  * decaffeinate suggestions:
  * DS101: Remove unnecessary use of Array.from
@@ -21,11 +50,13 @@
 // are read by jison in the `parser.lexer` function defined in coffee-script.coffee.
 
 let Lexer;
-const {Rewriter, INVERSES} = require('./rewriter');
+const { Rewriter, INVERSES } = require('./rewriter');
 
 // Import the helpers we need.
-const {count, starts, compact, repeat, invertLiterate,
-locationDataToString,  throwSyntaxError} = require('./helpers');
+const {
+  count, starts, compact, repeat, invertLiterate,
+  locationDataToString, throwSyntaxError,
+} = require('./helpers');
 
 // The Lexer Class
 // ---------------
@@ -34,7 +65,6 @@ locationDataToString,  throwSyntaxError} = require('./helpers');
 // tokens. Some potential ambiguity in the grammar has been avoided by
 // pushing some extra smarts into the Lexer.
 exports.Lexer = (Lexer = class Lexer {
-
   // **tokenize** is the Lexer's main method. Scan by attempting to match tokens
   // one at a time, using a regular expression anchored at the start of the
   // remaining code, or a custom recursive token-matching method
@@ -48,54 +78,51 @@ exports.Lexer = (Lexer = class Lexer {
   tokenize(code, opts) {
     let end;
     if (opts == null) { opts = {}; }
-    this.literate   = opts.literate;  // Are we lexing literate CoffeeScript?
-    this.indent     = 0;              // The current indentation level.
-    this.baseIndent = 0;              // The overall minimum indentation level
-    this.indebt     = 0;              // The over-indentation at the current level.
-    this.outdebt    = 0;              // The under-outdentation at the current level.
-    this.indents    = [];             // The stack of all current indentation levels.
-    this.ends       = [];             // The stack for pairing up tokens.
-    this.tokens     = [];             // Stream of parsed tokens in the form `['TYPE', value, location data]`.
-    this.seenFor    = false;             // Used to recognize FORIN, FOROF and FORFROM tokens.
-    this.seenImport = false;             // Used to recognize IMPORT FROM? AS? tokens.
-    this.seenExport = false;             // Used to recognize EXPORT FROM? AS? tokens.
-    this.importSpecifierList = false;    // Used to identify when in an IMPORT {...} FROM? ...
-    this.exportSpecifierList = false;    // Used to identify when in an EXPORT {...} FROM? ...
+    this.literate = opts.literate; // Are we lexing literate CoffeeScript?
+    this.indent = 0; // The current indentation level.
+    this.baseIndent = 0; // The overall minimum indentation level
+    this.indebt = 0; // The over-indentation at the current level.
+    this.outdebt = 0; // The under-outdentation at the current level.
+    this.indents = []; // The stack of all current indentation levels.
+    this.ends = []; // The stack for pairing up tokens.
+    this.tokens = []; // Stream of parsed tokens in the form `['TYPE', value, location data]`.
+    this.seenFor = false; // Used to recognize FORIN, FOROF and FORFROM tokens.
+    this.seenImport = false; // Used to recognize IMPORT FROM? AS? tokens.
+    this.seenExport = false; // Used to recognize EXPORT FROM? AS? tokens.
+    this.importSpecifierList = false; // Used to identify when in an IMPORT {...} FROM? ...
+    this.exportSpecifierList = false; // Used to identify when in an EXPORT {...} FROM? ...
 
-    this.chunkLine =
-      opts.line || 0;             // The start line for the current @chunk.
-    this.chunkColumn =
-      opts.column || 0;           // The start column of the current @chunk.
-    code = this.clean(code);           // The stripped, cleaned original source code.
+    this.chunkLine = opts.line || 0; // The start line for the current @chunk.
+    this.chunkColumn = opts.column || 0; // The start column of the current @chunk.
+    code = this.clean(code); // The stripped, cleaned original source code.
 
     // At every position, run through this list of attempted matches,
     // short-circuiting if any of them succeed. Their order determines precedence:
     // `@literalToken` is the fallback catch-all.
     let i = 0;
     while ((this.chunk = code.slice(i))) {
-      const consumed = 
-           this.identifierToken() ||
-           this.commentToken()    ||
-           this.whitespaceToken() ||
-           this.lineToken()       ||
-           this.stringToken()     ||
-           this.numberToken()     ||
-           this.regexToken()      ||
-           this.jsToken()         ||
-           this.literalToken();
+      const consumed = this.identifierToken()
+           || this.commentToken()
+           || this.whitespaceToken()
+           || this.lineToken()
+           || this.stringToken()
+           || this.numberToken()
+           || this.regexToken()
+           || this.jsToken()
+           || this.literalToken();
 
       // Update position
       [this.chunkLine, this.chunkColumn] = Array.from(this.getLineAndColumnFromChunk(consumed));
 
       i += consumed;
 
-      if (opts.untilBalanced && (this.ends.length === 0)) { return {tokens: this.tokens, index: i}; }
+      if (opts.untilBalanced && (this.ends.length === 0)) { return { tokens: this.tokens, index: i }; }
     }
 
     this.closeIndentation();
     if (end = this.ends.pop()) { this.error(`missing ${end.tag}`, end.origin[2]); }
     if (opts.rewrite === false) { return this.tokens; }
-    return (new Rewriter).rewrite(this.tokens);
+    return (new Rewriter()).rewrite(this.tokens);
   }
 
   // Preprocess the code to remove leading and trailing whitespace, carriage
@@ -122,13 +149,14 @@ exports.Lexer = (Lexer = class Lexer {
   // referenced as property names here, so you can still do `jQuery.is()` even
   // though `is` means `===` otherwise.
   identifierToken() {
-    let alias, match, needle2, needle3;
+    let alias; let match; let needle2; let
+      needle3;
     if (!(match = IDENTIFIER.exec(this.chunk))) { return 0; }
     let [input, id, colon] = Array.from(match);
 
     // Preserve length of id for location data
     const idLength = id.length;
-    let poppedToken = undefined;
+    let poppedToken;
 
     if ((id === 'own') && (this.tag() === 'FOR')) {
       this.token('OWN', id);
@@ -139,7 +167,8 @@ exports.Lexer = (Lexer = class Lexer {
       return id.length;
     }
     if ((id === 'as') && this.seenImport) {
-      let needle, needle1;
+      let needle; let
+        needle1;
       if (this.value() === '*') {
         this.tokens[this.tokens.length - 1][0] = 'IMPORT_ALL';
       } else if ((needle = this.value(), Array.from(COFFEE_KEYWORDS).includes(needle))) {
@@ -161,16 +190,14 @@ exports.Lexer = (Lexer = class Lexer {
 
     const prev = this.tokens[this.tokens.length - 1];
 
-    let tag =
-      colon || ((prev != null) &&
-         (['.', '?.', '::', '?::'].includes(prev[0]) ||
-         (!prev.spaced && (prev[0] === '@')))) ?
-        'PROPERTY'
-      :
-        'IDENTIFIER';
+    let tag = colon || ((prev != null)
+         && (['.', '?.', '::', '?::'].includes(prev[0])
+         || (!prev.spaced && (prev[0] === '@'))))
+      ? 'PROPERTY'
+      : 'IDENTIFIER';
 
-    if ((tag === 'IDENTIFIER') && (Array.from(JS_KEYWORDS).includes(id) || Array.from(COFFEE_KEYWORDS).includes(id)) &&
-       !(this.exportSpecifierList && Array.from(COFFEE_KEYWORDS).includes(id))) {
+    if ((tag === 'IDENTIFIER') && (Array.from(JS_KEYWORDS).includes(id) || Array.from(COFFEE_KEYWORDS).includes(id))
+       && !(this.exportSpecifierList && Array.from(COFFEE_KEYWORDS).includes(id))) {
       let needle4;
       tag = id.toUpperCase();
       if ((tag === 'WHEN') && (needle4 = this.tag(), Array.from(LINE_BREAK).includes(needle4))) {
@@ -187,24 +214,24 @@ exports.Lexer = (Lexer = class Lexer {
         tag = 'UNARY';
       } else if (Array.from(RELATION).includes(tag)) {
         if ((tag !== 'INSTANCEOF') && this.seenFor) {
-          tag = 'FOR' + tag;
+          tag = `FOR${tag}`;
           this.seenFor = false;
         } else {
           tag = 'RELATION';
           if (this.value() === '!') {
             poppedToken = this.tokens.pop();
-            id = '!' + id;
+            id = `!${id}`;
           }
         }
       }
-    } else if ((tag === 'IDENTIFIER') && this.seenFor && (id === 'from') &&
-       isForFrom(prev)) {
+    } else if ((tag === 'IDENTIFIER') && this.seenFor && (id === 'from')
+       && isForFrom(prev)) {
       tag = 'FORFROM';
       this.seenFor = false;
     }
 
     if ((tag === 'IDENTIFIER') && Array.from(RESERVED).includes(id)) {
-      this.error(`reserved word '${id}'`, {length: id.length});
+      this.error(`reserved word '${id}'`, { length: id.length });
     }
 
     if (tag !== 'PROPERTY') {
@@ -212,22 +239,23 @@ exports.Lexer = (Lexer = class Lexer {
         alias = id;
         id = COFFEE_ALIAS_MAP[id];
       }
-      tag = (() => { switch (id) {
-        case '!':                 return 'UNARY';
-        case '==': case '!=':          return 'COMPARE';
-        case 'true': case 'false':     return 'BOOL';
-        case 'break': case 'continue': 
-             case 'debugger':          return 'STATEMENT';
-        case '&&': case '||':          return id;
-        default:  return tag;
-      } })();
+      tag = (() => {
+        switch (id) {
+          case '!': return 'UNARY';
+          case '==': case '!=': return 'COMPARE';
+          case 'true': case 'false': return 'BOOL';
+          case 'break': case 'continue':
+          case 'debugger': return 'STATEMENT';
+          case '&&': case '||': return id;
+          default: return tag;
+        }
+      })();
     }
 
     const tagToken = this.token(tag, id, 0, idLength);
     if (alias) { tagToken.origin = [tag, alias, tagToken[2]]; }
     if (poppedToken) {
-      [tagToken[2].first_line, tagToken[2].first_column] =
-        Array.from([poppedToken[2].first_line, poppedToken[2].first_column]);
+      [tagToken[2].first_line, tagToken[2].first_column] = Array.from([poppedToken[2].first_line, poppedToken[2].first_column]);
     }
     if (colon) {
       const colonOffset = input.lastIndexOf(':');
@@ -240,7 +268,8 @@ exports.Lexer = (Lexer = class Lexer {
   // Matches numbers, including decimals, hex, and exponential notation.
   // Be careful not to interfere with ranges-in-progress.
   numberToken() {
-    let match, needle;
+    let match; let
+      needle;
     if (!(match = NUMBER.exec(this.chunk))) { return 0; }
 
     let number = match[0];
@@ -248,26 +277,28 @@ exports.Lexer = (Lexer = class Lexer {
 
     switch (false) {
       case !/^0[BOX]/.test(number):
-        this.error(`radix prefix in '${number}' must be lowercase`, {offset: 1});
+        this.error(`radix prefix in '${number}' must be lowercase`, { offset: 1 });
         break;
       case !/^(?!0x).*E/.test(number):
         this.error(`exponential notation in '${number}' must be indicated with a lowercase 'e'`,
-          {offset: number.indexOf('E')});
+          { offset: number.indexOf('E') });
         break;
       case !/^0\d*[89]/.test(number):
-        this.error(`decimal literal '${number}' must not be prefixed with '0'`, {length: lexedLength});
+        this.error(`decimal literal '${number}' must not be prefixed with '0'`, { length: lexedLength });
         break;
       case !/^0\d+/.test(number):
-        this.error(`octal literal '${number}' must be prefixed with '0o'`, {length: lexedLength});
+        this.error(`octal literal '${number}' must be prefixed with '0o'`, { length: lexedLength });
         break;
     }
 
-    const base = (() => { switch (number.charAt(1)) {
-      case 'b': return 2;
-      case 'o': return 8;
-      case 'x': return 16;
-      default: return null;
-    } })();
+    const base = (() => {
+      switch (number.charAt(1)) {
+        case 'b': return 2;
+        case 'o': return 8;
+        case 'x': return 16;
+        default: return null;
+      }
+    })();
     const numberValue = (base != null) ? parseInt(number.slice(2), base) : parseFloat(number);
     if ((needle = number.charAt(1), ['b', 'o'].includes(needle))) {
       number = `0x${numberValue.toString(16)}`;
@@ -291,15 +322,17 @@ exports.Lexer = (Lexer = class Lexer {
       this.tokens[this.tokens.length - 1][0] = 'FROM';
     }
 
-    const regex = (() => { switch (quote) {
-      case "'":   return STRING_SINGLE;
-      case '"':   return STRING_DOUBLE;
-      case "'''": return HEREDOC_SINGLE;
-      case '"""': return HEREDOC_DOUBLE;
-    } })();
+    const regex = (() => {
+      switch (quote) {
+        case "'": return STRING_SINGLE;
+        case '"': return STRING_DOUBLE;
+        case "'''": return HEREDOC_SINGLE;
+        case '"""': return HEREDOC_DOUBLE;
+      }
+    })();
     const heredoc = quote.length === 3;
 
-    const {tokens, index: end} = this.matchWithInterpolations(regex, quote);
+    const { tokens, index: end } = this.matchWithInterpolations(regex, quote);
     const $ = tokens.length - 1;
 
     const delimiter = quote.charAt(0);
@@ -320,26 +353,25 @@ exports.Lexer = (Lexer = class Lexer {
       })()).join('#{}');
       while ((match = HEREDOC_INDENT.exec(doc))) {
         const attempt = match[1];
-        if ((indent === null) || (0 < attempt.length && attempt.length < indent.length)) { indent = attempt; }
+        if ((indent === null) || (attempt.length > 0 && attempt.length < indent.length)) { indent = attempt; }
       }
       if (indent) { indentRegex = new RegExp(`\\n${indent}`, 'g'); }
-      this.mergeInterpolationTokens(tokens, {delimiter}, (value, i) => {
-        value = this.formatString(value, {delimiter: quote});
+      this.mergeInterpolationTokens(tokens, { delimiter }, (value, i) => {
+        value = this.formatString(value, { delimiter: quote });
         if (indentRegex) { value = value.replace(indentRegex, '\n'); }
-        if (i === 0) { value = value.replace(LEADING_BLANK_LINE,  ''); }
+        if (i === 0) { value = value.replace(LEADING_BLANK_LINE, ''); }
         if (i === $) { value = value.replace(TRAILING_BLANK_LINE, ''); }
         return value;
       });
     } else {
-      this.mergeInterpolationTokens(tokens, {delimiter}, (value, i) => {
-        value = this.formatString(value, {delimiter: quote});
-        value = value.replace(SIMPLE_STRING_OMIT, function(match, offset) {
-          if (((i === 0) && (offset === 0)) ||
-             ((i === $) && ((offset + match.length) === value.length))) {
+      this.mergeInterpolationTokens(tokens, { delimiter }, (value, i) => {
+        value = this.formatString(value, { delimiter: quote });
+        value = value.replace(SIMPLE_STRING_OMIT, (match, offset) => {
+          if (((i === 0) && (offset === 0))
+             || ((i === $) && ((offset + match.length) === value.length))) {
             return '';
-          } else {
-            return ' ';
           }
+          return ' ';
         });
         return value;
       });
@@ -356,7 +388,7 @@ exports.Lexer = (Lexer = class Lexer {
     if (here) {
       if (match = HERECOMMENT_ILLEGAL.exec(comment)) {
         this.error(`block comments cannot contain ${match[0]}`,
-          {offset: match.index, length: match[0].length});
+          { offset: match.index, length: match[0].length });
       }
       if (here.indexOf('\n') >= 0) {
         here = here.replace(new RegExp(`\\n${repeat(' ', this.indent)}`, 'g'), '\n');
@@ -369,13 +401,13 @@ exports.Lexer = (Lexer = class Lexer {
   // Matches JavaScript interpolated directly into the source via backticks.
   jsToken() {
     let match;
-    if ((this.chunk.charAt(0) !== '`') ||
-      (!(match = HERE_JSTOKEN.exec(this.chunk) || JSTOKEN.exec(this.chunk)))) { return 0; }
+    if ((this.chunk.charAt(0) !== '`')
+      || (!(match = HERE_JSTOKEN.exec(this.chunk) || JSTOKEN.exec(this.chunk)))) { return 0; }
     // Convert escaped backticks to backticks, and escaped backslashes
     // just before escaped backticks to backslashes
-    const script = match[1].replace(/\\+(`|$)/g, string => // `string` is always a value like '\`', '\\\`', '\\\\\`', etc.
+    const script = match[1].replace(/\\+(`|$)/g, (string) => // `string` is always a value like '\`', '\\\`', '\\\\\`', etc.
     // By reducing it to its latter half, we turn '\`' to '`', '\\\`' to '\`', etc.
-    string.slice(-Math.ceil(string.length / 2)));
+      string.slice(-Math.ceil(string.length / 2)));
     this.token('JS', script, 0, match[0].length);
     return match[0].length;
   }
@@ -384,20 +416,22 @@ exports.Lexer = (Lexer = class Lexer {
   // Lexing regular expressions is difficult to distinguish from division, so we
   // borrow some basic heuristics from JavaScript and Ruby.
   regexToken() {
-    let closed, match;
-    let body, index, regex, tokens;
+    let closed; let
+      match;
+    let body; let index; let regex; let
+      tokens;
     switch (false) {
       case !(match = REGEX_ILLEGAL.exec(this.chunk)):
         this.error(`regular expressions cannot begin with ${match[2]}`,
-          {offset: match.index + match[1].length});
+          { offset: match.index + match[1].length });
         break;
       case !(match = this.matchWithInterpolations(HEREGEX, '///')):
-        ({tokens, index} = match);
+        ({ tokens, index } = match);
         break;
       case !(match = REGEX.exec(this.chunk)):
         [regex, body, closed] = Array.from(match);
-        this.validateEscapes(body, {isRegex: true, offsetInChunk: 1});
-        body = this.formatRegex(body, {delimiter: '/'});
+        this.validateEscapes(body, { isRegex: true, offsetInChunk: 1 });
+        body = this.formatRegex(body, { delimiter: '/' });
         index = regex.length;
         var prev = this.tokens[this.tokens.length - 1];
         if (prev) {
@@ -418,20 +452,20 @@ exports.Lexer = (Lexer = class Lexer {
     const origin = this.makeToken('REGEX', null, 0, end);
     switch (false) {
       case !!VALID_FLAGS.test(flags):
-        this.error(`invalid regular expression flags ${flags}`, {offset: index, length: flags.length});
+        this.error(`invalid regular expression flags ${flags}`, { offset: index, length: flags.length });
         break;
       case !regex && (tokens.length !== 1):
         if (body == null) { body = this.formatHeregex(tokens[0][1]); }
-        this.token('REGEX', `${this.makeDelimitedLiteral(body, {delimiter: '/'})}${flags}`, 0, end, origin);
+        this.token('REGEX', `${this.makeDelimitedLiteral(body, { delimiter: '/' })}${flags}`, 0, end, origin);
         break;
       default:
         this.token('REGEX_START', '(', 0, 0, origin);
         this.token('IDENTIFIER', 'RegExp', 0, 0);
         this.token('CALL_START', '(', 0, 0);
-        this.mergeInterpolationTokens(tokens, {delimiter: '"', double: true}, this.formatHeregex);
+        this.mergeInterpolationTokens(tokens, { delimiter: '"', double: true }, this.formatHeregex);
         if (flags) {
           this.token(',', ',', index - 1, 0);
-          this.token('STRING', '"' + flags + '"', index - 1, flags.length);
+          this.token('STRING', `"${flags}"`, index - 1, flags.length);
         }
         this.token(')', ')', end - 1, 0);
         this.token('REGEX_END', ')', end - 1, 0);
@@ -480,11 +514,11 @@ exports.Lexer = (Lexer = class Lexer {
       const diff = (size - this.indent) + this.outdebt;
       this.token('INDENT', diff, indent.length - size, size);
       this.indents.push(diff);
-      this.ends.push({tag: 'OUTDENT'});
+      this.ends.push({ tag: 'OUTDENT' });
       this.outdebt = (this.indebt = 0);
       this.indent = size;
     } else if (size < this.baseIndent) {
-      this.error('missing indentation', {offset: indent.length});
+      this.error('missing indentation', { offset: indent.length });
     } else {
       this.indebt = 0;
       this.outdentToken(this.indent - size, noNewlines, indent.length);
@@ -506,7 +540,7 @@ exports.Lexer = (Lexer = class Lexer {
         this.outdebt = 0;
       } else if (lastIndent < this.outdebt) {
         this.outdebt -= lastIndent;
-        moveOut  -= lastIndent;
+        moveOut -= lastIndent;
       } else {
         dent = this.indents.pop() + this.outdebt;
         if (outdentLength && Array.from(INDENTABLE_CLOSERS).includes(this.chunk[outdentLength])) {
@@ -531,12 +565,13 @@ exports.Lexer = (Lexer = class Lexer {
   // Matches and consumes non-meaningful whitespace. Tag the previous token
   // as being “spaced”, because there are some cases where it makes a difference.
   whitespaceToken() {
-    let match, nline;
-    if ((!(match = WHITESPACE.exec(this.chunk))) &&
-                    (!(nline = this.chunk.charAt(0) === '\n'))) { return 0; }
+    let match; let
+      nline;
+    if ((!(match = WHITESPACE.exec(this.chunk)))
+                    && (!(nline = this.chunk.charAt(0) === '\n'))) { return 0; }
     const prev = this.tokens[this.tokens.length - 1];
     if (prev) { prev[match ? 'spaced' : 'newLine'] = true; }
-    if (match) { return match[0].length; } else { return 0; }
+    if (match) { return match[0].length; } return 0;
   }
 
   // Generate a newline token. Consecutive newlines get merged together.
@@ -559,14 +594,15 @@ exports.Lexer = (Lexer = class Lexer {
   // here. `;` and newlines are both treated as a `TERMINATOR`, we distinguish
   // parentheses that indicate a method call from regular parentheses, and so on.
   literalToken() {
-    let match, needle, origin, value;
+    let match; let needle; let origin; let
+      value;
     if (match = OPERATOR.exec(this.chunk)) {
       [value] = Array.from(match);
       if (CODE.test(value)) { this.tagParameters(); }
     } else {
       value = this.chunk.charAt(0);
     }
-    let tag  = value;
+    let tag = value;
     let prev = this.tokens[this.tokens.length - 1];
 
     if (prev && (needle = value, ['=', ...Array.from(COMPOUND_ASSIGN)].includes(needle))) {
@@ -600,13 +636,20 @@ exports.Lexer = (Lexer = class Lexer {
       tag = 'TERMINATOR';
     } else if ((value === '*') && (prev[0] === 'EXPORT')) {
       tag = 'EXPORT_ALL';
-    } else if (Array.from(MATH).includes(value)) {            tag = 'MATH';
-    } else if (Array.from(COMPARE).includes(value)) {         tag = 'COMPARE';
-    } else if (Array.from(COMPOUND_ASSIGN).includes(value)) { tag = 'COMPOUND_ASSIGN';
-    } else if (Array.from(UNARY).includes(value)) {           tag = 'UNARY';
-    } else if (Array.from(UNARY_MATH).includes(value)) {      tag = 'UNARY_MATH';
-    } else if (Array.from(SHIFT).includes(value)) {           tag = 'SHIFT';
-    } else if ((value === '?') && (prev != null ? prev.spaced : undefined)) { tag = 'BIN?';
+    } else if (Array.from(MATH).includes(value)) {
+      tag = 'MATH';
+    } else if (Array.from(COMPARE).includes(value)) {
+      tag = 'COMPARE';
+    } else if (Array.from(COMPOUND_ASSIGN).includes(value)) {
+      tag = 'COMPOUND_ASSIGN';
+    } else if (Array.from(UNARY).includes(value)) {
+      tag = 'UNARY';
+    } else if (Array.from(UNARY_MATH).includes(value)) {
+      tag = 'UNARY_MATH';
+    } else if (Array.from(SHIFT).includes(value)) {
+      tag = 'SHIFT';
+    } else if ((value === '?') && (prev != null ? prev.spaced : undefined)) {
+      tag = 'BIN?';
     } else if (prev && !prev.spaced) {
       if ((value === '(') && Array.from(CALLABLE).includes(prev[0])) {
         if (prev[0] === '?') { prev[0] = 'FUNC_EXIST'; }
@@ -614,13 +657,13 @@ exports.Lexer = (Lexer = class Lexer {
       } else if ((value === '[') && Array.from(INDEXABLE).includes(prev[0])) {
         tag = 'INDEX_START';
         switch (prev[0]) {
-          case '?':  prev[0] = 'INDEX_SOAK'; break;
+          case '?': prev[0] = 'INDEX_SOAK'; break;
         }
       }
     }
     const token = this.makeToken(tag, value);
     switch (value) {
-      case '(': case '{': case '[': this.ends.push({tag: INVERSES[value], origin: token}); break;
+      case '(': case '{': case '[': this.ends.push({ tag: INVERSES[value], origin: token }); break;
       case ')': case '}': case ']': this.pair(value); break;
     }
     this.tokens.push(token);
@@ -637,7 +680,7 @@ exports.Lexer = (Lexer = class Lexer {
     let tok;
     if (this.tag() !== ')') { return this; }
     const stack = [];
-    const {tokens} = this;
+    const { tokens } = this;
     let i = tokens.length;
     tokens[--i][0] = 'PARAM_END';
     while ((tok = tokens[--i])) {
@@ -646,7 +689,8 @@ exports.Lexer = (Lexer = class Lexer {
           stack.push(tok);
           break;
         case '(': case 'CALL_START':
-          if (stack.length) { stack.pop();
+          if (stack.length) {
+            stack.pop();
           } else if (tok[0] === '(') {
             tok[0] = 'PARAM_START';
             return this;
@@ -688,7 +732,7 @@ exports.Lexer = (Lexer = class Lexer {
       let nested;
       const [strPart] = Array.from(regex.exec(str));
 
-      this.validateEscapes(strPart, {isRegex: delimiter.charAt(0) === '/', offsetInChunk});
+      this.validateEscapes(strPart, { isRegex: delimiter.charAt(0) === '/', offsetInChunk });
 
       // Push a fake 'NEOSTRING' token, which will get turned into a real string later.
       tokens.push(this.makeToken('NEOSTRING', strPart, offsetInChunk));
@@ -700,15 +744,15 @@ exports.Lexer = (Lexer = class Lexer {
 
       // The `1`s are to remove the `#` in `#{`.
       const [line, column] = Array.from(this.getLineAndColumnFromChunk(offsetInChunk + 1));
-      ({tokens: nested, index} =
-        new Lexer().tokenize(str.slice(1), {line, column, untilBalanced: true}));
+      ({ tokens: nested, index } = new Lexer().tokenize(str.slice(1), { line, column, untilBalanced: true }));
       // Skip the trailing `}`.
       index += 1;
 
       // Turn the leading and trailing `{` and `}` into parentheses. Unnecessary
       // parentheses will be removed later.
-      const open = nested[0], close = nested[nested.length - 1];
-      open[0]  = (open[1]  = '(');
+      const open = nested[0]; const
+        close = nested[nested.length - 1];
+      open[0] = (open[1] = '(');
       close[0] = (close[1] = ')');
       close.origin = ['', 'end of interpolation', close[2]];
 
@@ -723,10 +767,11 @@ exports.Lexer = (Lexer = class Lexer {
     }
 
     if (str.slice(0, delimiter.length) !== delimiter) {
-      this.error(`missing ${delimiter}`, {length: delimiter.length});
+      this.error(`missing ${delimiter}`, { length: delimiter.length });
     }
 
-    const firstToken = tokens[0], lastToken = tokens[tokens.length - 1];
+    const firstToken = tokens[0]; const
+      lastToken = tokens[tokens.length - 1];
     firstToken[2].first_column -= delimiter.length;
     if (lastToken[1].substr(-1) === '\n') {
       lastToken[2].last_line += 1;
@@ -736,7 +781,7 @@ exports.Lexer = (Lexer = class Lexer {
     }
     if (lastToken[1].length === 0) { lastToken[2].last_column -= 1; }
 
-    return {tokens, index: offsetInChunk + delimiter.length};
+    return { tokens, index: offsetInChunk + delimiter.length };
   }
 
   // Merge the array `tokens` of the fake token types 'TOKENS' and 'NEOSTRING'
@@ -744,14 +789,16 @@ exports.Lexer = (Lexer = class Lexer {
   // of 'NEOSTRING's are converted using `fn` and turned into strings using
   // `options` first.
   mergeInterpolationTokens(tokens, options, fn) {
-    let lparen, token;
+    let lparen; let
+      token;
     if (tokens.length > 1) {
       lparen = this.token('STRING_START', '(', 0, 0);
     }
 
     const firstIndex = this.tokens.length;
     for (let i = 0; i < tokens.length; i++) {
-      var locationToken, tokensToPush;
+      var locationToken; var
+        tokensToPush;
       var firstEmptyStringIndex;
       token = tokens[i];
       const [tag, value] = Array.from(token);
@@ -792,10 +839,10 @@ exports.Lexer = (Lexer = class Lexer {
         // Create a 0-length "+" token.
         const plusToken = this.token('+', '+');
         plusToken[2] = {
-          first_line:   locationToken[2].first_line,
+          first_line: locationToken[2].first_line,
           first_column: locationToken[2].first_column,
-          last_line:    locationToken[2].first_line,
-          last_column:  locationToken[2].first_column
+          last_line: locationToken[2].first_line,
+          last_column: locationToken[2].first_column,
         };
       }
       this.tokens.push(...Array.from(tokensToPush || []));
@@ -804,18 +851,18 @@ exports.Lexer = (Lexer = class Lexer {
     if (lparen) {
       const lastToken = tokens[tokens.length - 1];
       lparen.origin = ['STRING', null, {
-        first_line:   lparen[2].first_line,
+        first_line: lparen[2].first_line,
         first_column: lparen[2].first_column,
-        last_line:    lastToken[2].last_line,
-        last_column:  lastToken[2].last_column
-      }
+        last_line: lastToken[2].last_line,
+        last_column: lastToken[2].last_column,
+      },
       ];
       const rparen = this.token('STRING_END', ')');
       return rparen[2] = {
-        first_line:   lastToken[2].last_line,
+        first_line: lastToken[2].last_line,
         first_column: lastToken[2].last_column,
-        last_line:    lastToken[2].last_line,
-        last_column:  lastToken[2].last_column
+        last_line: lastToken[2].last_line,
+        last_column: lastToken[2].last_column,
       };
     }
   }
@@ -826,7 +873,7 @@ exports.Lexer = (Lexer = class Lexer {
     let wanted;
     const prev = this.ends[this.ends.length - 1];
     if (tag !== (wanted = prev != null ? prev.tag : undefined)) {
-      if ('OUTDENT' !== wanted) { this.error(`unmatched ${tag}`); }
+      if (wanted !== 'OUTDENT') { this.error(`unmatched ${tag}`); }
       // Auto-close INDENT to support syntax like this:
       //
       //     el.click((event) ->
@@ -854,14 +901,15 @@ exports.Lexer = (Lexer = class Lexer {
     if (offset >= this.chunk.length) {
       string = this.chunk;
     } else {
-      string = this.chunk.slice(0, +(offset-1) + 1 || undefined);
+      string = this.chunk.slice(0, +(offset - 1) + 1 || undefined);
     }
 
     const lineCount = count(string, '\n');
 
     let column = this.chunkColumn;
     if (lineCount > 0) {
-      const array = string.split('\n'), lastLine = array[array.length - 1];
+      const array = string.split('\n'); const
+        lastLine = array[array.length - 1];
       column = lastLine.length;
     } else {
       column += string.length;
@@ -874,18 +922,18 @@ exports.Lexer = (Lexer = class Lexer {
   // to the results.
   makeToken(tag, value, offsetInChunk, length) {
     if (offsetInChunk == null) { offsetInChunk = 0; }
-    if (length == null) { ({
-      length
-    } = value); }
+    if (length == null) {
+      ({
+        length,
+      } = value);
+    }
     const locationData = {};
-    [locationData.first_line, locationData.first_column] =
-      Array.from(this.getLineAndColumnFromChunk(offsetInChunk));
+    [locationData.first_line, locationData.first_column] = Array.from(this.getLineAndColumnFromChunk(offsetInChunk));
 
     // Use length - 1 for the final offset - we're supplying the last_line and the last_column,
     // so if last_column == first_column, then we're looking at a character of length 1.
     const lastCharacter = length > 0 ? (length - 1) : 0;
-    [locationData.last_line, locationData.last_column] =
-      Array.from(this.getLineAndColumnFromChunk(offsetInChunk + lastCharacter));
+    [locationData.last_line, locationData.last_column] = Array.from(this.getLineAndColumnFromChunk(offsetInChunk + lastCharacter));
 
     const token = [tag, value, locationData];
 
@@ -920,8 +968,8 @@ exports.Lexer = (Lexer = class Lexer {
   // Are we in the midst of an unfinished expression?
   unfinished() {
     let needle;
-    return LINE_CONTINUER.test(this.chunk) ||
-    (needle = this.tag(), Array.from(UNFINISHED).includes(needle));
+    return LINE_CONTINUER.test(this.chunk)
+    || (needle = this.tag(), Array.from(UNFINISHED).includes(needle));
   }
 
   formatString(str, options) {
@@ -929,7 +977,7 @@ exports.Lexer = (Lexer = class Lexer {
   }
 
   formatHeregex(str) {
-    return this.formatRegex(str.replace(HEREGEX_OMIT, '$1$2'), {delimiter: '///'});
+    return this.formatRegex(str.replace(HEREGEX_OMIT, '$1$2'), { delimiter: '///' });
   }
 
   formatRegex(str, options) {
@@ -937,7 +985,7 @@ exports.Lexer = (Lexer = class Lexer {
   }
 
   unicodeCodePointToUnicodeEscapes(codePoint) {
-    const toUnicodeEscape = function(val) {
+    const toUnicodeEscape = function (val) {
       const str = val.toString(16);
       return `\\u${repeat('0', 4 - str.length)}${str}`;
     };
@@ -955,11 +1003,10 @@ exports.Lexer = (Lexer = class Lexer {
 
       const codePointDecimal = parseInt(codePointHex, 16);
       if (codePointDecimal > 0x10ffff) {
-        this.error("unicode code point escapes greater than \\u{10ffff} are not allowed", {
+        this.error('unicode code point escapes greater than \\u{10ffff} are not allowed', {
           offset: offset + options.delimiter.length,
-          length: codePointHex.length + 4
-        }
-        );
+          length: codePointHex.length + 4,
+        });
       }
 
       return this.unicodeCodePointToUnicodeEscapes(codePointDecimal);
@@ -969,25 +1016,21 @@ exports.Lexer = (Lexer = class Lexer {
   // Validates escapes in strings and regexes.
   validateEscapes(str, options) {
     if (options == null) { options = {}; }
-    const invalidEscapeRegex =
-      options.isRegex ?
-        REGEX_INVALID_ESCAPE
-      :
-        STRING_INVALID_ESCAPE;
+    const invalidEscapeRegex = options.isRegex
+      ? REGEX_INVALID_ESCAPE
+      : STRING_INVALID_ESCAPE;
     const match = invalidEscapeRegex.exec(str);
     if (!match) { return; }
-    const array = match[0], before = match[1], octal = match[2], hex = match[3], unicodeCodePoint = match[4], unicode = match[5];
-    const message =
-      octal ?
-        "octal escape sequences are not allowed"
-      :
-        "invalid escape sequence";
+    const array = match[0]; const before = match[1]; const octal = match[2]; const hex = match[3]; const unicodeCodePoint = match[4]; const
+      unicode = match[5];
+    const message = octal
+      ? 'octal escape sequences are not allowed'
+      : 'invalid escape sequence';
     const invalidEscape = `\\${octal || hex || unicodeCodePoint || unicode}`;
     return this.error(`${message} ${invalidEscape}`, {
       offset: (options.offsetInChunk != null ? options.offsetInChunk : 0) + match.index + before.length,
-      length: invalidEscape.length
-    }
-    );
+      length: invalidEscape.length,
+    });
   }
 
   // Constructs a string or regex by escaping certain characters.
@@ -1001,18 +1044,19 @@ exports.Lexer = (Lexer = class Lexer {
 |\\\\?(?:(\\n)|(\\r)|(\\u2028)|(\\u2029))\
 |(\\\\.)\
 `, 'g');
-    body = body.replace(regex, function(match, backslash, nul, delimiter, lf, cr, ls, ps, other) { switch (false) {
+    body = body.replace(regex, (match, backslash, nul, delimiter, lf, cr, ls, ps, other) => {
+      switch (false) {
       // Ignore escaped backslashes.
-      case !backslash: if (options.double) { return backslash + backslash; } else { return backslash; }
-      case !nul:       return '\\x00';
-      case !delimiter: return `\\${delimiter}`;
-      case !lf:        return '\\n';
-      case !cr:        return '\\r';
-      case !ls:        return '\\u2028';
-      case !ps:        return '\\u2029';
-      case !other:     if (options.double) { return `\\${other}`; } else { return other; }
-    }
-     });
+        case !backslash: if (options.double) { return backslash + backslash; } return backslash;
+        case !nul: return '\\x00';
+        case !delimiter: return `\\${delimiter}`;
+        case !lf: return '\\n';
+        case !cr: return '\\r';
+        case !ls: return '\\u2028';
+        case !ps: return '\\u2029';
+        case !other: if (options.double) { return `\\${other}`; } return other;
+      }
+    });
     return `${options.delimiter}${body}${options.delimiter}`;
   }
 
@@ -1020,14 +1064,12 @@ exports.Lexer = (Lexer = class Lexer {
   // location of a token (`token[2]`).
   error(message, options) {
     if (options == null) { options = {}; }
-    const location =
-      (() => {
+    const location = (() => {
       if ('first_line' in options) {
         return options;
-      } else {
-        const [first_line, first_column] = Array.from(this.getLineAndColumnFromChunk(options.offset != null ? options.offset : 0));
-        return {first_line, first_column, last_column: (first_column + (options.length != null ? options.length : 1)) - 1};
       }
+      const [first_line, first_column] = Array.from(this.getLineAndColumnFromChunk(options.offset != null ? options.offset : 0));
+      return { first_line, first_column, last_column: (first_column + (options.length != null ? options.length : 1)) - 1 };
     })();
     return throwSyntaxError(message, location);
   }
@@ -1036,17 +1078,19 @@ exports.Lexer = (Lexer = class Lexer {
 // Helper functions
 // ----------------
 
-var isUnassignable = function(name, displayName) { let needle;
-if (displayName == null) { displayName = name; } switch (false) {
-  case (needle = name, ![...Array.from(JS_KEYWORDS), ...Array.from(COFFEE_KEYWORDS)].includes(needle)):
-    return `keyword '${displayName}' can't be assigned`;
-  case !Array.from(STRICT_PROSCRIBED).includes(name):
-    return `'${displayName}' can't be assigned`;
-  case !Array.from(RESERVED).includes(name):
-    return `reserved word '${displayName}' can't be assigned`;
-  default:
-    return false;
-} };
+var isUnassignable = function (name, displayName) {
+  let needle;
+  if (displayName == null) { displayName = name; } switch (false) {
+    case (needle = name, ![...Array.from(JS_KEYWORDS), ...Array.from(COFFEE_KEYWORDS)].includes(needle)):
+      return `keyword '${displayName}' can't be assigned`;
+    case !Array.from(STRICT_PROSCRIBED).includes(name):
+      return `'${displayName}' can't be assigned`;
+    case !Array.from(RESERVED).includes(name):
+      return `reserved word '${displayName}' can't be assigned`;
+    default:
+      return false;
+  }
+};
 
 exports.isUnassignable = isUnassignable;
 
@@ -1054,7 +1098,7 @@ exports.isUnassignable = isUnassignable;
 // `export` statements (handled above) and in the declaration line of a `for`
 // loop. Try to detect when `from` is a variable identifier and when it is this
 // “sometimes” keyword.
-var isForFrom = function(prev) {
+var isForFrom = function (prev) {
   if (prev[0] === 'IDENTIFIER') {
     // `for i from from`, `for from from iterable`
     if (prev[1] === 'from') {
@@ -1064,14 +1108,13 @@ var isForFrom = function(prev) {
     // `for i from iterable`
     return true;
   // `for from…`
-  } else if (prev[0] === 'FOR') {
+  } if (prev[0] === 'FOR') {
     return false;
   // `for {from}…`, `for [from]…`, `for {a, from}…`, `for {a: from}…`
-  } else if (['{', '[', ',', ':'].includes(prev[1])) {
+  } if (['{', '[', ',', ':'].includes(prev[1])) {
     return false;
-  } else {
-    return true;
   }
+  return true;
 };
 
 // Constants
@@ -1084,30 +1127,30 @@ var JS_KEYWORDS = [
   'return', 'throw', 'break', 'continue', 'debugger', 'yield',
   'if', 'else', 'switch', 'for', 'while', 'do', 'try', 'catch', 'finally',
   'class', 'extends', 'super',
-  'import', 'export', 'default'
+  'import', 'export', 'default',
 ];
 
 // CoffeeScript-only keywords.
 var COFFEE_KEYWORDS = [
   'undefined', 'Infinity', 'NaN',
-  'then', 'unless', 'until', 'loop', 'of', 'by', 'when'
+  'then', 'unless', 'until', 'loop', 'of', 'by', 'when',
 ];
 
 var COFFEE_ALIAS_MAP = {
-  and  : '&&',
-  or   : '||',
-  is   : '==',
-  isnt : '!=',
-  not  : '!',
-  yes  : 'true',
-  no   : 'false',
-  on   : 'true',
-  off  : 'false'
+  and: '&&',
+  or: '||',
+  is: '==',
+  isnt: '!=',
+  not: '!',
+  yes: 'true',
+  no: 'false',
+  on: 'true',
+  off: 'false',
 };
 
-var COFFEE_ALIASES  = ((() => {
+var COFFEE_ALIASES = ((() => {
   const result = [];
-  for (let key in COFFEE_ALIAS_MAP) {
+  for (const key in COFFEE_ALIAS_MAP) {
     result.push(key);
   }
   return result;
@@ -1120,7 +1163,7 @@ COFFEE_KEYWORDS = COFFEE_KEYWORDS.concat(COFFEE_ALIASES);
 var RESERVED = [
   'case', 'function', 'var', 'void', 'with', 'const', 'let', 'enum',
   'native', 'implements', 'interface', 'package', 'private',
-  'protected', 'public', 'static'
+  'protected', 'public', 'static',
 ];
 
 var STRICT_PROSCRIBED = ['arguments', 'eval'];
@@ -1133,20 +1176,20 @@ exports.JS_FORBIDDEN = JS_KEYWORDS.concat(RESERVED).concat(STRICT_PROSCRIBED);
 var BOM = 65279;
 
 // Token matching regexes.
-var IDENTIFIER = new RegExp(`^\
+var IDENTIFIER = new RegExp('^\
 (?!\\d)\
 ((?:(?!\\s)[$\\w\\x7f-\\uffff])+)\
 ([^\\n\\S]*:(?!:))?\
-`);
+');
 
-var NUMBER     = new RegExp(`\
+var NUMBER = new RegExp('\
 ^0b[01]+|\
 ^0o[0-7]+|\
 ^0x[\\da-f]+|\
 ^\\d*\\.?\\d+(?:e[+-]?\\d+)?\
-`, 'i');
+', 'i');
 
-var OPERATOR   = new RegExp(`^(\
+var OPERATOR = new RegExp('^(\
 ?:[-=]>\
 |[-+*/%<>&|^!?=]=\
 |>>>=?\
@@ -1154,36 +1197,36 @@ var OPERATOR   = new RegExp(`^(\
 |([&|<>*/%])\\2=?\
 |\\?(\\.|::)\
 |\\.{2,3}\
-)`);
+)');
 
 var WHITESPACE = /^[^\n\S]+/;
 
-var COMMENT    = /^###([^#][\s\S]*?)(?:###[^\n\S]*|###$)|^(?:\s*#(?!##[^#]).*)+/;
+var COMMENT = /^###([^#][\s\S]*?)(?:###[^\n\S]*|###$)|^(?:\s*#(?!##[^#]).*)+/;
 
-var CODE       = /^[-=]>/;
+var CODE = /^[-=]>/;
 
 var MULTI_DENT = /^(?:\n[^\n\S]*)+/;
 
-var JSTOKEN      = new RegExp(`^\`(?!\`\`)((?:[^\`\\\\]|\\\\[\\s\\S])*)\``);
-var HERE_JSTOKEN = new RegExp(`^\`\`\`((?:[^\`\\\\]|\\\\[\\s\\S]|\`(?!\`\`))*)\`\`\``);
+var JSTOKEN = new RegExp('^`(?!``)((?:[^`\\\\]|\\\\[\\s\\S])*)`');
+var HERE_JSTOKEN = new RegExp('^```((?:[^`\\\\]|\\\\[\\s\\S]|`(?!``))*)```');
 
 // String-matching-regexes.
-var STRING_START   = /^(?:'''|"""|'|")/;
+var STRING_START = /^(?:'''|"""|'|")/;
 
-var STRING_SINGLE  = new RegExp(`^(?:[^\\\\']|\\\\[\\s\\S])*`);
-var STRING_DOUBLE  = new RegExp(`^(?:[^\\\\"#]|\\\\[\\s\\S]|\\#(?!\\{))*`);
-var HEREDOC_SINGLE = new RegExp(`^(?:[^\\\\']|\\\\[\\s\\S]|'(?!''))*`);
-var HEREDOC_DOUBLE = new RegExp(`^(?:[^\\\\"#]|\\\\[\\s\\S]|"(?!"")|\\#(?!\\{))*`);
+var STRING_SINGLE = new RegExp('^(?:[^\\\\\']|\\\\[\\s\\S])*');
+var STRING_DOUBLE = new RegExp('^(?:[^\\\\"#]|\\\\[\\s\\S]|\\#(?!\\{))*');
+var HEREDOC_SINGLE = new RegExp('^(?:[^\\\\\']|\\\\[\\s\\S]|\'(?!\'\'))*');
+var HEREDOC_DOUBLE = new RegExp('^(?:[^\\\\"#]|\\\\[\\s\\S]|"(?!"")|\\#(?!\\{))*');
 
-var STRING_OMIT    = new RegExp(`\
+var STRING_OMIT = new RegExp('\
 ((?:\\\\\\\\)+)\
 |\\\\[^\\S\\n]*\\n\\s*\
-`, 'g');
+', 'g');
 var SIMPLE_STRING_OMIT = /\s*\n\s*/g;
-var HEREDOC_INDENT     = /\n+([^\n\S]*)(?=\S)/g;
+var HEREDOC_INDENT = /\n+([^\n\S]*)(?=\S)/g;
 
 // Regex-matching-regexes.
-var REGEX = new RegExp(`^\
+var REGEX = new RegExp('^\
 /(?!/)((\
 ?:[^[/\\n\\\\]\
 |\\\\[^\\n]\
@@ -1191,29 +1234,29 @@ var REGEX = new RegExp(`^\
 (?:\\\\[^\\n]|[^\\]\\n\\\\])*\
 \\]\
 )*)(/)?\
-`);
+');
 
-var REGEX_FLAGS  = /^\w*/;
-var VALID_FLAGS  = /^(?!.*(.).*\1)[imguy]*$/;
+var REGEX_FLAGS = /^\w*/;
+var VALID_FLAGS = /^(?!.*(.).*\1)[imguy]*$/;
 
-var HEREGEX      = new RegExp(`^(?:[^\\\\/#]|\\\\[\\s\\S]|/(?!//)|\\#(?!\\{))*`);
+var HEREGEX = new RegExp('^(?:[^\\\\/#]|\\\\[\\s\\S]|/(?!//)|\\#(?!\\{))*');
 
-var HEREGEX_OMIT = new RegExp(`\
+var HEREGEX_OMIT = new RegExp('\
 ((?:\\\\\\\\)+)\
 |\\\\(\\s)\
 |\\s+(?:#.*)?\
-`, 'g');
+', 'g');
 
-var REGEX_ILLEGAL = new RegExp(`^(/|/{3}\\s*)(\\*)`);
+var REGEX_ILLEGAL = new RegExp('^(/|/{3}\\s*)(\\*)');
 
-var POSSIBLY_DIVISION   = new RegExp(`^/=?\\s`);
+var POSSIBLY_DIVISION = new RegExp('^/=?\\s');
 
 // Other regexes.
 var HERECOMMENT_ILLEGAL = /\*\//;
 
-var LINE_CONTINUER      = new RegExp(`^\\s*(?:,|\\??\\.(?![.\\d])|::)`);
+var LINE_CONTINUER = new RegExp('^\\s*(?:,|\\??\\.(?![.\\d])|::)');
 
-var STRING_INVALID_ESCAPE = new RegExp(`\
+var STRING_INVALID_ESCAPE = new RegExp('\
 ((?:^|[^\\\\])(?:\\\\\\\\)*)\
 \\\\(\
 ?:(0[0-7]|[1-7])\
@@ -1221,8 +1264,8 @@ var STRING_INVALID_ESCAPE = new RegExp(`\
 |(u\\{(?![\\da-fA-F]{1,}\\})[^}]*\\}?)\
 |(u(?!\\{|[\\da-fA-F]{4}).{0,4})\
 )\
-`);
-var REGEX_INVALID_ESCAPE = new RegExp(`\
+');
+var REGEX_INVALID_ESCAPE = new RegExp('\
 ((?:^|[^\\\\])(?:\\\\\\\\)*)\
 \\\\(\
 ?:(0[0-7])\
@@ -1230,23 +1273,23 @@ var REGEX_INVALID_ESCAPE = new RegExp(`\
 |(u\\{(?![\\da-fA-F]{1,}\\})[^}]*\\}?)\
 |(u(?!\\{|[\\da-fA-F]{4}).{0,4})\
 )\
-`);
+');
 
-var UNICODE_CODE_POINT_ESCAPE = new RegExp(`\
+var UNICODE_CODE_POINT_ESCAPE = new RegExp('\
 (\\\\\\\\)\
 |\
 \\\\u\\{([\\da-fA-F]+)\\}\
-`, 'g');
+', 'g');
 
-var LEADING_BLANK_LINE  = /^[^\n\S]*\n/;
+var LEADING_BLANK_LINE = /^[^\n\S]*\n/;
 var TRAILING_BLANK_LINE = /\n[^\n\S]*$/;
 
-var TRAILING_SPACES     = /\s+$/;
+var TRAILING_SPACES = /\s+$/;
 
 // Compound assignment tokens.
 var COMPOUND_ASSIGN = [
   '-=', '+=', '/=', '*=', '%=', '||=', '&&=', '?=', '<<=', '>>=', '>>>=',
-  '&=', '^=', '|=', '**=', '//=', '%%='
+  '&=', '^=', '|=', '**=', '//=', '%%=',
 ];
 
 // Unary tokens.
@@ -1272,10 +1315,10 @@ const BOOL = ['TRUE', 'FALSE'];
 // Tokens which could legitimately be invoked or indexed. An opening
 // parentheses or bracket following these tokens will be recorded as the start
 // of a function invocation or indexing operation.
-var CALLABLE  = ['IDENTIFIER', 'PROPERTY', ')', ']', '?', '@', 'THIS', 'SUPER'];
+var CALLABLE = ['IDENTIFIER', 'PROPERTY', ')', ']', '?', '@', 'THIS', 'SUPER'];
 var INDEXABLE = CALLABLE.concat([
   'NUMBER', 'INFINITY', 'NAN', 'STRING', 'STRING_END', 'REGEX', 'REGEX_END',
-  'BOOL', 'NULL', 'UNDEFINED', '}', '::'
+  'BOOL', 'NULL', 'UNDEFINED', '}', '::',
 ]);
 
 // Tokens which a regular expression will never immediately follow (except spaced
@@ -1294,5 +1337,5 @@ var INDENTABLE_CLOSERS = [')', '}', ']'];
 
 // Tokens that, when appearing at the end of a line, suppress a following TERMINATOR/INDENT token
 var UNFINISHED = ['\\', '.', '?.', '?::', 'UNARY', 'MATH', 'UNARY_MATH', '+', '-',
-           '**', 'SHIFT', 'RELATION', 'COMPARE', '&', '^', '|', '&&', '||',
-           'BIN?', 'THROW', 'EXTENDS', 'DEFAULT'];
+  '**', 'SHIFT', 'RELATION', 'COMPARE', '&', '^', '|', '&&', '||',
+  'BIN?', 'THROW', 'EXTENDS', 'DEFAULT'];

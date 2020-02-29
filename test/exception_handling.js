@@ -1,3 +1,17 @@
+/* eslint-disable
+    brace-style,
+    consistent-return,
+    func-names,
+    max-len,
+    no-empty,
+    no-return-assign,
+    no-throw-literal,
+    no-undef,
+    no-unused-expressions,
+    no-unused-vars,
+*/
+// TODO: This file was created by bulk-decaffeinate.
+// Fix any style issues and re-enable lint.
 /*
  * decaffeinate suggestions:
  * DS102: Remove unnecessary code created because of implicit returns
@@ -13,71 +27,70 @@ const nonce = {};
 
 // Throw
 
-test("basic exception throwing", () => throws((function() { throw 'error'; }), 'error'));
+test('basic exception throwing', () => throws((() => { throw 'error'; }), 'error'));
 
 
 // Empty Try/Catch/Finally
 
-test("try can exist alone", function() {
+test('try can exist alone', () => {
   try {} catch (error) {}
 });
 
-test("try/catch with empty try, empty catch", function() {
+test('try/catch with empty try, empty catch', () => {
   try {}
-    // nothing
+  // nothing
   catch (err) {}
 });
-    // nothing
+// nothing
 
-test("single-line try/catch with empty try, empty catch", function() {
+test('single-line try/catch with empty try, empty catch', () => {
   try {} catch (err) {}
 });
 
-test("try/finally with empty try, empty finally", function() {
+test('try/finally with empty try, empty finally', () => {
   try {}
-    // nothing
+  // nothing
   finally {}
 });
-    // nothing
+// nothing
 
-test("single-line try/finally with empty try, empty finally", function() {
+test('single-line try/finally with empty try, empty finally', () => {
   try {} finally {}
 });
 
-test("try/catch/finally with empty try, empty catch, empty finally", function() {
-  try {}
-  catch (err) {}
-  finally {}
+test('try/catch/finally with empty try, empty catch, empty finally', () => {
+  try {} catch (err) {} finally {}
 });
 
-test("single-line try/catch/finally with empty try, empty catch, empty finally", function() {
+test('single-line try/catch/finally with empty try, empty catch, empty finally', () => {
   try {} catch (err) {} finally {}
 });
 
 
 // Try/Catch/Finally as an Expression
 
-test("return the result of try when no exception is thrown", function() {
-  const result = (() => { try {
-    return nonce;
-  } catch (err) {
-    return undefined;
-  }
-  finally {
-    undefined;
-  } })();
+test('return the result of try when no exception is thrown', () => {
+  const result = (() => {
+    try {
+      return nonce;
+    } catch (err) {
+      return undefined;
+    } finally {
+      undefined;
+    }
+  })();
   return eq(nonce, result);
 });
 
-test("single-line result of try when no exception is thrown", function() {
+test('single-line result of try when no exception is thrown', () => {
   const result = (() => { try { return nonce; } catch (err) { return undefined; } })();
   return eq(nonce, result);
 });
 
-test("return the result of catch when an exception is thrown", function() {
-  const fn = function() {
+test('return the result of catch when an exception is thrown', () => {
+  const fn = function () {
     try {
-      throw function() {};
+      throw function () {};
     } catch (err) {
       return nonce;
     }
@@ -86,17 +99,17 @@ test("return the result of catch when an exception is thrown", function() {
   return eq(nonce, fn());
 });
 
-test("single-line result of catch when an exception is thrown", function() {
-  const fn = function() {
-    try { throw (function() {}); } catch (err) { return nonce; }
+test('single-line result of catch when an exception is thrown', () => {
+  const fn = function () {
+    try { throw (function () {}); } catch (err) { return nonce; }
   };
   doesNotThrow(fn);
   return eq(nonce, fn());
 });
 
-test("optional catch", function() {
-  const fn = function() {
-    try { throw function() {}; } catch (error) {}
+test('optional catch', () => {
+  const fn = function () {
+    try { throw function () {}; } catch (error) {}
     return nonce;
   };
   doesNotThrow(fn);
@@ -106,10 +119,9 @@ test("optional catch", function() {
 
 // Try/Catch/Finally Interaction With Other Constructs
 
-test("try/catch with empty catch as last statement in a function body", function() {
-  const fn = function() {
-    try { return nonce; }
-    catch (err) {}
+test('try/catch with empty catch as last statement in a function body', () => {
+  const fn = function () {
+    try { return nonce; } catch (err) {}
   };
   return eq(nonce, fn());
 });
@@ -117,42 +129,43 @@ test("try/catch with empty catch as last statement in a function body", function
 
 // Catch leads to broken scoping: #1595
 
-test("try/catch with a reused variable name.", function() {
-  (function() {
+test('try/catch with a reused variable name.', () => {
+  (function () {
     let inner;
     try {
       return inner = 5;
     } catch (error) { return inner = error; }
-  })();
-      // nothing
+  }());
+  // nothing
   return eq(typeof inner, 'undefined');
 });
 
 
 // Allowed to destructure exceptions: #2580
 
-test("try/catch with destructuring the exception object", function() {
-
+test('try/catch with destructuring the exception object', () => {
   let message;
-  const result = (() => { try {
-    return missing.object;
-  } catch (error) {
-    ({message} = error);
-    return message;
-  } })();
+  const result = (() => {
+    try {
+      return missing.object;
+    } catch (error) {
+      ({ message } = error);
+      return message;
+    }
+  })();
 
   return eq(message, 'missing is not defined');
 });
 
 
-
-test("Try catch finally as implicit arguments", function() {
-  let foo, e;
-  const first = x => x;
+test('Try catch finally as implicit arguments', () => {
+  let foo; let
+    e;
+  const first = (x) => x;
 
   foo = false;
   try {
-    first((() => { try { return iamwhoiam(); } finally {foo = true; } })());
+    first((() => { try { return iamwhoiam(); } finally { foo = true; } })());
   } catch (error) { e = error; }
   eq(foo, true);
 
@@ -165,14 +178,14 @@ test("Try catch finally as implicit arguments", function() {
 });
 
 // Catch Should Not Require Param: #2900
-test("parameter-less catch clause", function() {
+test('parameter-less catch clause', () => {
   try {
     throw new Error('failed');
   } catch (error) {
     ok(true);
   }
 
-  try { throw new Error('failed'); } catch (error1) {} finally {ok(true); }
+  try { throw new Error('failed'); } catch (error1) {} finally { ok(true); }
 
   return ok((() => { try { throw new Error('failed'); } catch (error2) { return true; } })());
 });

@@ -1,3 +1,31 @@
+/* eslint-disable
+    consistent-return,
+    func-names,
+    global-require,
+    guard-for-in,
+    import/no-dynamic-require,
+    import/no-unresolved,
+    max-len,
+    no-console,
+    no-continue,
+    no-empty,
+    no-eval,
+    no-multi-assign,
+    no-param-reassign,
+    no-plusplus,
+    no-restricted-syntax,
+    no-return-assign,
+    no-shadow,
+    no-undef,
+    no-unused-vars,
+    no-use-before-define,
+    no-useless-escape,
+    no-var,
+    prefer-rest-params,
+    vars-on-top,
+*/
+// TODO: This file was created by bulk-decaffeinate.
+// Fix any style issues and re-enable lint.
 /*
  * decaffeinate suggestions:
  * DS101: Remove unnecessary use of Array.from
@@ -6,19 +34,20 @@
  * DS207: Consider shorter variations of null checks
  * Full docs: https://github.com/decaffeinate/decaffeinate/blob/master/docs/suggestions.md
  */
-let green, red, reset;
-const fs                        = require('fs');
-const path                      = require('path');
-const _                         = require('underscore');
+let green; let red; let
+  reset;
+const fs = require('fs');
+const path = require('path');
+const _ = require('underscore');
 const { spawn, exec, execSync } = require('child_process');
-const CoffeeScript              = require('./lib/coffee-script');
-const helpers                   = require('./lib/coffee-script/helpers');
+const CoffeeScript = require('./lib/coffee-script');
+const helpers = require('./lib/coffee-script/helpers');
 
 // ANSI Terminal Colors.
 let bold = (red = (green = (reset = '')));
 if (!process.env.NODE_DISABLE_COLORS) {
-  bold  = '\x1B[0;1m';
-  red   = '\x1B[0;31m';
+  bold = '\x1B[0;1m';
+  red = '\x1B[0;31m';
   green = '\x1B[0;32m';
   reset = '\x1B[0m';
 }
@@ -39,27 +68,27 @@ const majorVersion = parseInt(CoffeeScript.VERSION.split('.')[0], 10);
 
 
 // Log a message with a color.
-const log = (message, color, explanation) => console.log(color + message + reset + ' ' + (explanation || ''));
+const log = (message, color, explanation) => console.log(`${color + message + reset} ${explanation || ''}`);
 
 
-const spawnNodeProcess = function(args, output, callback) {
+const spawnNodeProcess = function (args, output, callback) {
   if (output == null) { output = 'stderr'; }
-  const relayOutput = buffer => console.log(buffer.toString());
-  const proc =         spawn('node', args);
+  const relayOutput = (buffer) => console.log(buffer.toString());
+  const proc = spawn('node', args);
   if ((output === 'both') || (output === 'stdout')) { proc.stdout.on('data', relayOutput); }
   if ((output === 'both') || (output === 'stderr')) { proc.stderr.on('data', relayOutput); }
-  return proc.on('exit', function(status) { if (typeof callback === 'function') { return callback(status); } });
+  return proc.on('exit', (status) => { if (typeof callback === 'function') { return callback(status); } });
 };
 
 // Run a CoffeeScript through our node/coffee interpreter.
-const run = (args, callback) => spawnNodeProcess(['bin/coffee'].concat(args), 'stderr', function(status) {
+const run = (args, callback) => spawnNodeProcess(['bin/coffee'].concat(args), 'stderr', (status) => {
   if (status !== 0) { process.exit(1); }
   if (typeof callback === 'function') { return callback(); }
 });
 
 
 // Build the CoffeeScript language from source.
-const buildParser = function() {
+const buildParser = function () {
   helpers.extend(global, require('util'));
   require('jison');
   let parser = require('./lib/coffee-script/grammar').parser.generate();
@@ -69,17 +98,17 @@ const buildParser = function() {
 var source = '';
     var fs = require('fs');
     if (typeof fs !== 'undefined' && fs !== null)
-        source = fs`
-  );
+        source = fs`);
   return fs.writeFileSync('lib/coffee-script/parser.js', parser);
 };
 
-const buildExceptParser = function(callback) {
+const buildExceptParser = function (callback) {
   let files = fs.readdirSync('src');
   files = ((() => {
     const result = [];
-    for (let file of Array.from(files)) {       if (file.match(/\.(lit)?coffee$/)) {
-        result.push('src/' + file);
+    for (const file of Array.from(files)) {
+      if (file.match(/\.(lit)?coffee$/)) {
+        result.push(`src/${file}`);
       }
     }
     return result;
@@ -87,18 +116,18 @@ const buildExceptParser = function(callback) {
   return run(['-c', '-o', 'lib/coffee-script'].concat(files), callback);
 };
 
-const build = function(callback) {
+const build = function (callback) {
   buildParser();
   return buildExceptParser(callback);
 };
 
-const testBuiltCode = function(watch) {
+const testBuiltCode = function (watch) {
   if (watch == null) { watch = false; }
   const csPath = './lib/coffee-script';
-  const csDir  = path.dirname(require.resolve(csPath));
+  const csDir = path.dirname(require.resolve(csPath));
 
-  for (let mod in require.cache) {
-    if (csDir === mod.slice(0 ,  csDir.length)) {
+  for (const mod in require.cache) {
+    if (csDir === mod.slice(0, csDir.length)) {
       delete require.cache[mod];
     }
   }
@@ -109,16 +138,16 @@ const testBuiltCode = function(watch) {
   }
 };
 
-const buildAndTest = function(includingParser, harmony) {
+const buildAndTest = function (includingParser, harmony) {
   if (includingParser == null) { includingParser = true; }
   if (harmony == null) { harmony = false; }
   process.stdout.write('\x1Bc'); // Clear terminal screen.
-  execSync('git checkout lib/*', {stdio: [0,1,2]}); // Reset the generated compiler.
+  execSync('git checkout lib/*', { stdio: [0, 1, 2] }); // Reset the generated compiler.
 
   const buildArgs = ['bin/cake'];
   buildArgs.push(includingParser ? 'build' : 'build:except-parser');
   log(`building${includingParser ? ', including parser' : ''}...`, green);
-  return spawnNodeProcess(buildArgs, 'both', function() {
+  return spawnNodeProcess(buildArgs, 'both', () => {
     log('testing...', green);
     let testArgs = harmony ? ['--harmony'] : [];
     testArgs = testArgs.concat(['bin/cake', 'test']);
@@ -126,16 +155,16 @@ const buildAndTest = function(includingParser, harmony) {
   });
 };
 
-const watchAndBuildAndTest = function(harmony) {
+const watchAndBuildAndTest = function (harmony) {
   if (harmony == null) { harmony = false; }
   buildAndTest(true, harmony);
-  fs.watch('src/', {interval: 200}, function(eventType, filename) {
+  fs.watch('src/', { interval: 200 }, (eventType, filename) => {
     if (eventType === 'change') {
       log(`src/${filename} changed, rebuilding...`);
       return buildAndTest((filename === 'grammar.coffee'), harmony);
     }
   });
-  return fs.watch('test/', {interval: 200, recursive: true}, function(eventType, filename) {
+  return fs.watch('test/', { interval: 200, recursive: true }, (eventType, filename) => {
     if (eventType === 'change') {
       log(`test/${filename} changed, rebuilding...`);
       return buildAndTest(false, harmony);
@@ -152,13 +181,13 @@ task('build:except-parser', 'build the CoffeeScript compiler, except for the Jis
 
 task('build:full', 'build the CoffeeScript compiler from source twice, and run the tests', () => build(() => build(testBuiltCode)));
 
-task('build:browser', 'merge the built scripts into a single file for use in a browser', function() {
+task('build:browser', 'merge the built scripts into a single file for use in a browser', () => {
   let code = `\
 require['../../package.json'] = (function() {
-  return ${fs.readFileSync("./package.json")};
+  return ${fs.readFileSync('./package.json')};
 })();\
 `;
-  for (let name of ['helpers', 'rewriter', 'lexer', 'parser', 'scope', 'nodes', 'sourcemap', 'coffee-script', 'browser']) {
+  for (const name of ['helpers', 'rewriter', 'lexer', 'parser', 'scope', 'nodes', 'sourcemap', 'coffee-script', 'browser']) {
     code += `\
 require['./${name}'] = (function() {
   var exports = {}, module = {exports: exports};
@@ -183,21 +212,22 @@ require['./${name}'] = (function() {
 }(this));\
 `;
   if (process.env.MINIFY !== 'false') {
-    ({compiledCode: code} = require('google-closure-compiler-js').compile({
+    ({ compiledCode: code } = require('google-closure-compiler-js').compile({
       jsCode: [{
         src: code,
-        languageOut: majorVersion === 1 ? 'ES5' : 'ES6'
-      }
-      ]}));
+        languageOut: majorVersion === 1 ? 'ES5' : 'ES6',
+      },
+      ],
+    }));
   }
   const outputFolder = `docs/v${majorVersion}/browser-compiler`;
   if (!fs.existsSync(outputFolder)) { fs.mkdirSync(outputFolder); }
-  return fs.writeFileSync(`${outputFolder}/coffee-script.js`, header + '\n' + code);
+  return fs.writeFileSync(`${outputFolder}/coffee-script.js`, `${header}\n${code}`);
 });
 
-task('build:browser:full', 'merge the built scripts into a single file for use in a browser, and test it', function() {
+task('build:browser:full', 'merge the built scripts into a single file for use in a browser, and test it', () => {
   invoke('build:browser');
-  console.log("built ... running browser tests:");
+  console.log('built ... running browser tests:');
   return invoke('test:browser');
 });
 
@@ -206,7 +236,7 @@ task('build:watch', 'watch and continually rebuild the CoffeeScript compiler, ru
 task('build:watch:harmony', 'watch and continually rebuild the CoffeeScript compiler, running harmony tests on each build', () => watchAndBuildAndTest(true));
 
 
-const buildDocs = function(watch) {
+const buildDocs = function (watch) {
   // Constants
   let renderIndex;
   if (watch == null) { watch = false; }
@@ -217,10 +247,10 @@ const buildDocs = function(watch) {
   const outputFolder = `docs/v${majorVersion}`;
 
   // Helpers
-  const releaseHeader = function(date, version, prevVersion) {
+  const releaseHeader = function (date, version, prevVersion) {
     const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 
-    const formatDate = date => date.replace(/^(\d\d\d\d)-(\d\d)-(\d\d)$/, (match, $1, $2, $3) => `${monthNames[$2 - 1]} ${+$3}, ${$1}`);
+    const formatDate = (date) => date.replace(/^(\d\d\d\d)-(\d\d)-(\d\d)$/, (match, $1, $2, $3) => `${monthNames[$2 - 1]} ${+$3}, ${$1}`);
 
     return `\
 <div class="anchor" id="${version}"></div>
@@ -233,25 +263,24 @@ const buildDocs = function(watch) {
 
   const codeFor = require(`./documentation/v${majorVersion}/code.coffee`);
 
-  const htmlFor = function() {
+  const htmlFor = function () {
     const markdownRenderer = require('markdown-it')({
       html: true,
-      typographer: true
+      typographer: true,
     });
 
     // Add some custom overrides to Markdown-It’s rendering, per
     // https://github.com/markdown-it/markdown-it/blob/master/docs/architecture.md#renderer
     const defaultFence = markdownRenderer.renderer.rules.fence;
-    markdownRenderer.renderer.rules.fence = function(tokens, idx, options, env, slf) {
+    markdownRenderer.renderer.rules.fence = function (tokens, idx, options, env, slf) {
       const code = tokens[idx].content;
       if ((code.indexOf('codeFor(') === 0) || (code.indexOf('releaseHeader(') === 0)) {
         return `<%= ${code} %>`;
-      } else {
-        return `<blockquote class=\"uneditable-code-block\">${defaultFence.apply(this, arguments)}</blockquote>`;
       }
+      return `<blockquote class=\"uneditable-code-block\">${defaultFence.apply(this, arguments)}</blockquote>`;
     };
 
-    return function(file, bookmark) {
+    return function (file, bookmark) {
       let md = fs.readFileSync(`${sectionsSourceFolder}/${file}.md`, 'utf-8');
       md = md.replace(/<%= releaseHeader %>/g, releaseHeader);
       md = md.replace(/<%= majorVersion %>/g, majorVersion);
@@ -259,12 +288,12 @@ const buildDocs = function(watch) {
       let html = markdownRenderer.render(md);
       return html = _.template(html)({
         codeFor: codeFor(),
-        releaseHeader
+        releaseHeader,
       });
     };
   };
 
-  var include = () => (function(file) {
+  var include = () => (function (file) {
     if (file.indexOf('/') === -1) { file = `${versionedSourceFolder}/${file}`; }
     let output = fs.readFileSync(file, 'utf-8');
     if (/\.html$/.test(file)) {
@@ -275,17 +304,16 @@ const buildDocs = function(watch) {
         fullVersion: CoffeeScript.VERSION,
         htmlFor: htmlFor(),
         codeFor: codeFor(),
-        include: include()
+        include: include(),
       });
     }
     return output;
   });
 
   // Task
-  (renderIndex = function() {
+  (renderIndex = function () {
     const render = _.template(fs.readFileSync(indexFile, 'utf-8'));
-    const output = render({
-      include: include()});
+    const output = render({ include: include() });
     fs.writeFileSync(`${outputFolder}/index.html`, output);
     return log('compiled', green, `${indexFile} → ${outputFolder}/index.html`);
   })();
@@ -294,8 +322,8 @@ const buildDocs = function(watch) {
   } catch (exception) {}
 
   if (watch) {
-    for (let target of [indexFile, versionedSourceFolder, examplesSourceFolder, sectionsSourceFolder]) {
-      fs.watch(target, {interval: 200}, renderIndex);
+    for (const target of [indexFile, versionedSourceFolder, examplesSourceFolder, sectionsSourceFolder]) {
+      fs.watch(target, { interval: 200 }, renderIndex);
     }
     return log('watching...', green);
   }
@@ -306,7 +334,7 @@ task('doc:site', 'build the documentation for the website', () => buildDocs());
 task('doc:site:watch', 'watch and continually rebuild the documentation for the website', () => buildDocs(true));
 
 
-const buildDocTests = function(watch) {
+const buildDocTests = function (watch) {
   // Constants
   let renderTest;
   if (watch == null) { watch = false; }
@@ -318,9 +346,9 @@ const buildDocTests = function(watch) {
   const testHelpers = fs.readFileSync('test/support/helpers.coffee', 'utf-8').replace(/exports\./g, '@');
 
   // Helpers
-  const testsInScriptBlocks = function() {
+  const testsInScriptBlocks = function () {
     let output = '';
-    for (let filename of Array.from(fs.readdirSync(testsSourceFolder))) {
+    for (const filename of Array.from(fs.readdirSync(testsSourceFolder))) {
       var type;
       if (filename.indexOf('.coffee') !== -1) {
         type = 'coffeescript';
@@ -342,19 +370,19 @@ ${fs.readFileSync(`test/${filename}`, 'utf-8')}
   };
 
   // Task
-  (renderTest = function() {
+  (renderTest = function () {
     const render = _.template(fs.readFileSync(testFile, 'utf-8'));
     const output = render({
       testHelpers,
-      tests: testsInScriptBlocks()
+      tests: testsInScriptBlocks(),
     });
     fs.writeFileSync(`${outputFolder}/test.html`, output);
     return log('compiled', green, `${testFile} → ${outputFolder}/test.html`);
   })();
 
   if (watch) {
-    for (let target of [testFile, testsSourceFolder]) {
-      fs.watch(target, {interval: 200}, renderTest);
+    for (const target of [testFile, testsSourceFolder]) {
+      fs.watch(target, { interval: 200 }, renderTest);
     }
     return log('watching...', green);
   }
@@ -365,16 +393,16 @@ task('doc:test', 'build the browser-based tests', () => buildDocTests());
 task('doc:test:watch', 'watch and continually rebuild the browser-based tests', () => buildDocTests(true));
 
 
-const buildAnnotatedSource = function(watch) {
+const buildAnnotatedSource = function (watch) {
   let generateAnnotatedSource;
   if (watch == null) { watch = false; }
-  (generateAnnotatedSource = function() {
-    exec(`node_modules/docco/bin/docco src/*.*coffee --output docs/v${majorVersion}/annotated-source`, function(err) { if (err) { throw err; } });
+  (generateAnnotatedSource = function () {
+    exec(`node_modules/docco/bin/docco src/*.*coffee --output docs/v${majorVersion}/annotated-source`, (err) => { if (err) { throw err; } });
     return log('generated', green, `annotated source in docs/v${majorVersion}/annotated-source/`);
   })();
 
   if (watch) {
-    fs.watch('src/', {interval: 200}, generateAnnotatedSource);
+    fs.watch('src/', { interval: 200 }, generateAnnotatedSource);
     return log('watching...', green);
   }
 };
@@ -384,7 +412,7 @@ task('doc:source', 'build the annotated source documentation', () => buildAnnota
 task('doc:source:watch', 'watch and continually rebuild the annotated source documentation', () => buildAnnotatedSource(true));
 
 
-task('release', 'build and test the CoffeeScript source, and build the documentation', function() {
+task('release', 'build and test the CoffeeScript source, and build the documentation', () => {
   invoke('build:full');
   invoke('build:browser:full');
   invoke('doc:site');
@@ -392,49 +420,51 @@ task('release', 'build and test the CoffeeScript source, and build the documenta
   return invoke('doc:source');
 });
 
-task('bench', 'quick benchmark of compilation time', function() {
-  const {Rewriter} = require('./lib/coffee-script/rewriter');
+task('bench', 'quick benchmark of compilation time', () => {
+  const { Rewriter } = require('./lib/coffee-script/rewriter');
   const sources = ['coffee-script', 'grammar', 'helpers', 'lexer', 'nodes', 'rewriter'];
-  const coffee  = sources.map(name => fs.readFileSync(`src/${name}.coffee`)).join('\n');
-  const litcoffee = fs.readFileSync("src/scope.litcoffee").toString();
-  const fmt    = ms => ` ${bold}${ `   ${ms}`.slice(-4) }${reset} ms`;
-  let total  = 0;
-  let now    = Date.now();
-  const time   = function() { let ms;
-  total += (ms = -(now - (now = Date.now()))); return fmt(ms); };
-  let tokens = CoffeeScript.tokens(coffee, {rewrite: false});
-  const littokens = CoffeeScript.tokens(litcoffee, {rewrite: false, literate: true});
+  const coffee = sources.map((name) => fs.readFileSync(`src/${name}.coffee`)).join('\n');
+  const litcoffee = fs.readFileSync('src/scope.litcoffee').toString();
+  const fmt = (ms) => ` ${bold}${`   ${ms}`.slice(-4)}${reset} ms`;
+  let total = 0;
+  let now = Date.now();
+  const time = function () {
+    let ms;
+    total += (ms = -(now - (now = Date.now()))); return fmt(ms);
+  };
+  let tokens = CoffeeScript.tokens(coffee, { rewrite: false });
+  const littokens = CoffeeScript.tokens(litcoffee, { rewrite: false, literate: true });
   tokens = tokens.concat(littokens);
   console.log(`Lex    ${time()} (${tokens.length} tokens)`);
   tokens = new Rewriter().rewrite(tokens);
   console.log(`Rewrite${time()} (${tokens.length} tokens)`);
-  const nodes  = CoffeeScript.nodes(tokens);
+  const nodes = CoffeeScript.nodes(tokens);
   console.log(`Parse  ${time()}`);
-  const js     = nodes.compile({bare: true});
+  const js = nodes.compile({ bare: true });
   console.log(`Compile${time()} (${js.length} chars)`);
-  return console.log(`total  ${ fmt(total) }`);
+  return console.log(`total  ${fmt(total)}`);
 });
 
 
 // Run the CoffeeScript test suite.
-var runTests = function(CoffeeScript) {
+var runTests = function (CoffeeScript) {
   CoffeeScript.register();
-  const startTime   = Date.now();
+  const startTime = Date.now();
   let currentFile = null;
   let passedTests = 0;
-  const failures    = [];
+  const failures = [];
 
   const object = require('assert');
-  for (let name in object) { const func = object[name]; global[name] = func; }
+  for (const name in object) { const func = object[name]; global[name] = func; }
 
   // Convenience aliases.
   global.CoffeeScript = CoffeeScript;
   global.Repl = require('./lib/coffee-script/repl');
 
   // Our test helper function for delimiting different test cases.
-  global.test = function(description, fn) {
+  global.test = function (description, fn) {
     try {
-      fn.test = {description, currentFile};
+      fn.test = { description, currentFile };
       fn.call(fn);
       return ++passedTests;
     } catch (e) {
@@ -442,7 +472,7 @@ var runTests = function(CoffeeScript) {
         filename: currentFile,
         error: e,
         description: ((description != null) ? description : undefined),
-        source: ((fn.toString != null) ? fn.toString() : undefined)
+        source: ((fn.toString != null) ? fn.toString() : undefined),
       });
     }
   };
@@ -451,13 +481,15 @@ var runTests = function(CoffeeScript) {
 
   // When all the tests have run, collect and print errors.
   // If a stacktrace is available, output the compiled function source.
-  process.on('exit', function() {
+  process.on('exit', () => {
     const time = ((Date.now() - startTime) / 1000).toFixed(2);
     const message = `passed ${passedTests} tests in ${time} seconds${reset}`;
     if (!failures.length) { return log(message, green); }
     log(`failed ${failures.length} and ${message}`, red);
-    for (let fail of Array.from(failures)) {
-      const {error, filename, description, source}  = fail;
+    for (const fail of Array.from(failures)) {
+      const {
+        error, filename, description, source,
+      } = fail;
       console.log('');
       if (description) { log(`  ${description}`, red); }
       log(`  ${error.stack}`, red);
@@ -468,17 +500,18 @@ var runTests = function(CoffeeScript) {
   // Run every test in the `test` folder, recording failures.
   const files = fs.readdirSync('test');
 
-  for (let file of Array.from(files)) {
-    if (helpers.isCoffee(file)) {var filename;
-    
+  for (const file of Array.from(files)) {
+    if (helpers.isCoffee(file)) {
+      var filename;
+
       const literate = helpers.isLiterate(file);
       currentFile = (filename = path.join('test', file));
       const code = fs.readFileSync(filename);
       try {
-        CoffeeScript.run(code.toString(), {filename, literate});
+        CoffeeScript.run(code.toString(), { filename, literate });
       } catch (error1) {
         const error = error1;
-        failures.push({filename, error});
+        failures.push({ filename, error });
       }
     }
   }
@@ -486,13 +519,13 @@ var runTests = function(CoffeeScript) {
 };
 
 
-task('test', 'run the CoffeeScript language test suite', function() {
+task('test', 'run the CoffeeScript language test suite', () => {
   const testResults = runTests(CoffeeScript);
   if (!testResults) { return process.exit(1); }
 });
 
 
-task('test:browser', 'run the test suite against the merged browser script', function() {
+task('test:browser', 'run the test suite against the merged browser script', () => {
   const source = fs.readFileSync(`docs/v${majorVersion}/browser-compiler/coffee-script.js`, 'utf-8');
   const result = {};
   global.testingBrowser = true;

@@ -1,3 +1,10 @@
+/* eslint-disable
+    func-names,
+    no-multi-str,
+    no-undef,
+*/
+// TODO: This file was created by bulk-decaffeinate.
+// Fix any style issues and re-enable lint.
 /*
  * decaffeinate suggestions:
  * DS101: Remove unnecessary use of Array.from
@@ -7,10 +14,10 @@
 // Parser
 // ---------
 
-test("operator precedence for logical operators", function() {
-  const source = `\
+test('operator precedence for logical operators', () => {
+  const source = '\
 a or b and c\
-`;
+';
   const block = CoffeeScript.nodes(source);
   const [expression] = Array.from(block.expressions);
   eq(expression.first.base.value, 'a');
@@ -20,10 +27,10 @@ a or b and c\
   return eq(expression.second.second.base.value, 'c');
 });
 
-test("operator precedence for bitwise operators", function() {
-  const source = `\
+test('operator precedence for bitwise operators', () => {
+  const source = '\
 a | b ^ c & d\
-`;
+';
   const block = CoffeeScript.nodes(source);
   const [expression] = Array.from(block.expressions);
   eq(expression.first.base.value, 'a');
@@ -35,10 +42,10 @@ a | b ^ c & d\
   return eq(expression.second.second.second.base.value, 'd');
 });
 
-test("operator precedence for binary ? operator", function() {
-  const source = `\
+test('operator precedence for binary ? operator', () => {
+  const source = '\
 a ? b and c\
-`;
+';
   const block = CoffeeScript.nodes(source);
   const [expression] = Array.from(block.expressions);
   eq(expression.first.base.value, 'a');
@@ -48,13 +55,13 @@ a ? b and c\
   return eq(expression.second.second.base.value, 'c');
 });
 
-test("new calls have a range including the new", function() {
-  const source = `\
+test('new calls have a range including the new', () => {
+  const source = '\
 a = new B().c(d)\
-`;
+';
   const block = CoffeeScript.nodes(source);
 
-  const assertColumnRange = function(node, firstColumn, lastColumn) {
+  const assertColumnRange = function (node, firstColumn, lastColumn) {
     eq(node.locationData.first_line, 0);
     eq(node.locationData.first_column, firstColumn);
     eq(node.locationData.last_line, 0);
@@ -72,13 +79,13 @@ a = new B().c(d)\
   return assertColumnRange(innerCall, 4, 10);
 });
 
-test("location data is properly set for nested `new`", function() {
-  const source = `\
+test('location data is properly set for nested `new`', () => {
+  const source = '\
 new new A()()\
-`;
+';
   const block = CoffeeScript.nodes(source);
 
-  const assertColumnRange = function(node, firstColumn, lastColumn) {
+  const assertColumnRange = function (node, firstColumn, lastColumn) {
     eq(node.locationData.first_line, 0);
     eq(node.locationData.first_column, firstColumn);
     eq(node.locationData.last_line, 0);

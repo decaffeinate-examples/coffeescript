@@ -1,3 +1,29 @@
+/* eslint-disable
+    brace-style,
+    consistent-return,
+    default-case,
+    func-names,
+    max-classes-per-file,
+    max-len,
+    no-cond-assign,
+    no-constant-condition,
+    no-continue,
+    no-empty,
+    no-nested-ternary,
+    no-plusplus,
+    no-restricted-syntax,
+    no-return-assign,
+    no-self-compare,
+    no-shadow,
+    no-throw-literal,
+    no-undef,
+    no-unreachable,
+    no-unused-expressions,
+    no-unused-vars,
+    prefer-rest-params,
+*/
+// TODO: This file was created by bulk-decaffeinate.
+// Fix any style issues and re-enable lint.
 /*
  * decaffeinate suggestions:
  * DS101: Remove unnecessary use of Array.from
@@ -22,11 +48,11 @@
 // TODO: make sure postfix forms and expression coercion are properly tested
 
 // shared identity function
-const id = function(_) { if (arguments.length === 1) { return _; } else { return Array.prototype.slice.call(arguments); } };
+const id = function (_) { if (arguments.length === 1) { return _; } return Array.prototype.slice.call(arguments); };
 
 // Conditionals
 
-test("basic conditionals", function() {
+test('basic conditionals', () => {
   if (false) {
     ok(false);
   } else if (false) {
@@ -53,35 +79,32 @@ test("basic conditionals", function() {
 
   if (!false) {
     return ok(true);
-  } else if (!false) {
+  } if (!false) {
     return ok(false);
-  } else {
-    return ok(true);
   }
+  return ok(true);
 });
 
-test("single-line conditional", function() {
+test('single-line conditional', () => {
   if (false) { ok(false); } else { ok(true); }
-  if (!false) { return ok(true); } else { return ok(false); }
+  if (!false) { return ok(true); } return ok(false);
 });
 
-test("nested conditionals", function() {
+test('nested conditionals', () => {
   const nonce = {};
   return eq(nonce, ((() => {
     if (true) {
-    if (!false) {
-      if (false) { return false; } else {
+      if (!false) {
+        if (false) { return false; }
         if (true) {
           return nonce;
         }
       }
     }
-  }
-  })())
-  );
+  })()));
 });
 
-test("nested single-line conditionals", function() {
+test('nested single-line conditionals', () => {
   let b;
   const nonce = {};
 
@@ -96,47 +119,44 @@ test("nested single-line conditionals", function() {
   return eq(nonce, d);
 });
 
-test("empty conditional bodies", () => eq(undefined, ((() => {
+test('empty conditional bodies', () => eq(undefined, ((() => {
   if (false) {
-} else if (false) {} 
-else {}
-})())
-));
+  } else if (false) {} else {}
+})())));
 
-test("conditional bodies containing only comments", function() {
-  eq(undefined, (true ?
+test('conditional bodies containing only comments', () => {
+  eq(undefined, (true
     /*
     block comment
     */
-  undefined : undefined
+    ? undefined : undefined
     // comment
-  )
-  );
+  ));
 
   return eq(undefined, ((() => {
     if (false) {
     // comment
-  } else if (true) {} 
+    } else if (true) {}
     /*
     block comment
     */
-  else {}
-  })())
-  );
+    else {}
+  })()));
 });
 
-test("return value of if-else is from the proper body", function() {
+test('return value of if-else is from the proper body', () => {
   const nonce = {};
   return eq(nonce, false ? undefined : nonce);
 });
 
-test("return value of unless-else is from the proper body", function() {
+test('return value of unless-else is from the proper body', () => {
   const nonce = {};
   return eq(nonce, !true ? undefined : nonce);
 });
 
-test("assign inside the condition of a conditional statement", function() {
-  let a, b;
+test('assign inside the condition of a conditional statement', () => {
+  let a; let
+    b;
   const nonce = {};
   if (a = nonce) { 1; }
   eq(nonce, a);
@@ -147,38 +167,38 @@ test("assign inside the condition of a conditional statement", function() {
 
 // Interactions With Functions
 
-test("single-line function definition with single-line conditional", function() {
-  const fn = function() { if (1 < 0.5) { return 1; } else { return -1; } };
+test('single-line function definition with single-line conditional', () => {
+  const fn = function () { if (1 < 0.5) { return 1; } return -1; };
   return ok(fn() === -1);
 });
 
-test("function resturns conditional value with no `else`", function() {
-  const fn = function() {
+test('function resturns conditional value with no `else`', () => {
+  const fn = function () {
     if (false) { return true; }
   };
   return eq(undefined, fn());
 });
 
-test("function returns a conditional value", function() {
+test('function returns a conditional value', () => {
   const a = {};
-  const fnA = function() {
-    if (false) { return undefined; } else { return a; }
+  const fnA = function () {
+    if (false) { return undefined; } return a;
   };
   eq(a, fnA());
 
   const b = {};
-  const fnB = function() {
-    if (!false) { return b; } else { return undefined; }
+  const fnB = function () {
+    if (!false) { return b; } return undefined;
   };
   return eq(b, fnB());
 });
 
-test("passing a conditional value to a function", function() {
+test('passing a conditional value to a function', () => {
   const nonce = {};
   return eq(nonce, id(false ? undefined : nonce));
 });
 
-test("unmatched `then` should catch implicit calls", function() {
+test('unmatched `then` should catch implicit calls', () => {
   let a = 0;
   const trueFn = () => true;
   if (trueFn(undefined)) { a++; }
@@ -188,68 +208,62 @@ test("unmatched `then` should catch implicit calls", function() {
 
 // if-to-ternary
 
-test("if-to-ternary with instanceof requires parentheses", function() {
+test('if-to-ternary with instanceof requires parentheses', () => {
   const nonce = {};
-  return eq(nonce, ({} instanceof Object ?
-    nonce
-  :
-    undefined)
-  );
+  return eq(nonce, ({} instanceof Object
+    ? nonce
+    : undefined));
 });
 
-test("if-to-ternary as part of a larger operation requires parentheses", () => ok(2, 1 + (false ? 0 : 1)));
+test('if-to-ternary as part of a larger operation requires parentheses', () => ok(2, 1 + (false ? 0 : 1)));
 
 
 // Odd Formatting
 
-test("if-else indented within an assignment", function() {
+test('if-else indented within an assignment', () => {
   const nonce = {};
-  const result =
-    false ?
-      undefined
-    :
-      nonce;
+  const result = false
+    ? undefined
+    : nonce;
   return eq(nonce, result);
 });
 
-test("suppressed indentation via assignment", function() {
+test('suppressed indentation via assignment', () => {
   const nonce = {};
-  const result =
-    false ? undefined
-    : false    ? undefined
-    : 0     ? undefined
-    : 1 < 0 ? undefined
-    :               id(
-         false ? undefined
-         :          nonce
-    );
+  const result = false ? undefined
+    : false ? undefined
+      : 0 ? undefined
+        : 1 < 0 ? undefined
+          : id(
+            false ? undefined
+              : nonce,
+          );
   return eq(nonce, result);
 });
 
-test("tight formatting with leading `then`", function() {
+test('tight formatting with leading `then`', () => {
   const nonce = {};
   return eq(nonce,
-  true
-  ? nonce
-  : undefined
-  );
+    true
+      ? nonce
+      : undefined);
 });
 
-test("#738: inline function defintion", function() {
+test('#738: inline function defintion', () => {
   const nonce = {};
   const fn = true ? () => nonce : undefined;
   return eq(nonce, fn());
 });
 
-test("#748: trailing reserved identifiers", function() {
+test('#748: trailing reserved identifiers', () => {
   const nonce = {};
-  const obj = {delete: true};
-  const result = obj.delete ?
-    nonce : undefined;
+  const obj = { delete: true };
+  const result = obj.delete
+    ? nonce : undefined;
   return eq(nonce, result);
 });
 
-test('if-else within an assignment, condition parenthesized', function() {
+test('if-else within an assignment, condition parenthesized', () => {
   let result = (1 === 1) ? 'correct' : undefined;
   eq(result, 'correct');
 
@@ -263,7 +277,7 @@ test('if-else within an assignment, condition parenthesized', function() {
 
 // Postfix
 
-test("#3056: multiple postfix conditionals", function() {
+test('#3056: multiple postfix conditionals', () => {
   let temp = 'initial';
   if (false) { if (!true) { temp = 'ignored'; } }
   return eq(temp, 'initial');
@@ -271,8 +285,7 @@ test("#3056: multiple postfix conditionals", function() {
 
 // Loops
 
-test("basic `while` loops", function() {
-
+test('basic `while` loops', () => {
   let i = 5;
   let list = (() => {
     const result = [];
@@ -281,7 +294,7 @@ test("basic `while` loops", function() {
     }
     return result;
   })();
-  ok(list.join(' ') === "8 6 4 2");
+  ok(list.join(' ') === '8 6 4 2');
 
   i = 5;
   list = ((() => {
@@ -291,10 +304,10 @@ test("basic `while` loops", function() {
     }
     return result1;
   })());
-  ok(list.join(' ') === "12 9 6 3");
+  ok(list.join(' ') === '12 9 6 3');
 
   i = 5;
-  const func   = num => i -= num;
+  const func = (num) => i -= num;
   const assert = () => ok(i < 5 && 5 > 0);
   let results = (() => {
     const result2 = [];
@@ -320,7 +333,7 @@ test("basic `while` loops", function() {
 });
 
 
-test("Issue 759: `if` within `while` condition", () => (() => {
+test('Issue 759: `if` within `while` condition', () => (() => {
   const result = [];
   while (1 ? 0 : undefined) {
     result.push(2);
@@ -329,9 +342,9 @@ test("Issue 759: `if` within `while` condition", () => (() => {
 })());
 
 
-test("assignment inside the condition of a `while` loop", function() {
-
-  let a, b;
+test('assignment inside the condition of a `while` loop', () => {
+  let a; let
+    b;
   const nonce = {};
   let count = 1;
   while (count--) { a = nonce; }
@@ -344,8 +357,7 @@ test("assignment inside the condition of a `while` loop", function() {
 });
 
 
-test("While over break.", function() {
-
+test('While over break.', () => {
   let i = 0;
   const result = (() => {
     const result1 = [];
@@ -359,8 +371,7 @@ test("While over break.", function() {
 });
 
 
-test("While over continue.", function() {
-
+test('While over continue.', () => {
   let i = 0;
   const result = (() => {
     const result1 = [];
@@ -374,8 +385,7 @@ test("While over continue.", function() {
 });
 
 
-test("Basic `until`", function() {
-
+test('Basic `until`', () => {
   let value;
   value = false;
   let i = 0;
@@ -391,8 +401,7 @@ test("Basic `until`", function() {
 });
 
 
-test("Basic `loop`", function() {
-
+test('Basic `loop`', () => {
   let i = 5;
   const list = [];
   while (true) {
@@ -404,9 +413,9 @@ test("Basic `loop`", function() {
 });
 
 
-test("break at the top level", function() {
+test('break at the top level', () => {
   let result;
-  for (let i of [1,2,3]) {
+  for (const i of [1, 2, 3]) {
     result = i;
     if (i === 2) {
       break;
@@ -415,8 +424,8 @@ test("break at the top level", function() {
   return eq(2, result);
 });
 
-test("break *not* at the top level", function() {
-  const someFunc = function() {
+test('break *not* at the top level', () => {
+  const someFunc = function () {
     let result;
     let i = 0;
     while (++i < 3) {
@@ -430,28 +439,29 @@ test("break *not* at the top level", function() {
 
 // Switch
 
-test("basic `switch`", function() {
-
+test('basic `switch`', () => {
   const num = 10;
-  const result = (() => { switch (num) {
-    case 5: return false;
-    case 'a':
-      true;
-      true;
-      return false;
-    case 10: return true;
+  const result = (() => {
+    switch (num) {
+      case 5: return false;
+      case 'a':
+        true;
+        true;
+        return false;
+      case 10: return true;
 
 
-    // Mid-switch comment with whitespace
-    // and multi line
-    case 11: return false;
-    default: return false;
-  } })();
+        // Mid-switch comment with whitespace
+        // and multi line
+      case 11: return false;
+      default: return false;
+    }
+  })();
 
   ok(result);
 
 
-  const func = function(num) {
+  const func = function (num) {
     switch (num) {
       case 2: case 4: case 6:
         return true;
@@ -467,11 +477,10 @@ test("basic `switch`", function() {
 });
 
 
-test("Ensure that trailing switch elses don't get rewritten.", function() {
-
+test("Ensure that trailing switch elses don't get rewritten.", () => {
   let result = false;
-  switch ("word") {
-    case "one thing":
+  switch ('word') {
+    case 'one thing':
       doSomething();
       break;
     default:
@@ -481,11 +490,11 @@ test("Ensure that trailing switch elses don't get rewritten.", function() {
   ok(result);
 
   result = false;
-  switch ("word") {
-    case "one thing":
+  switch ('word') {
+    case 'one thing':
       doSomething();
       break;
-    case "other thing":
+    case 'other thing':
       doSomething();
       break;
     default:
@@ -496,26 +505,26 @@ test("Ensure that trailing switch elses don't get rewritten.", function() {
 });
 
 
-test("Should be able to handle switches sans-condition.", function() {
-
-  const result = (() => { switch (false) {
-    case !null:                     return 0;
-    case !!1:                       return 1;
-    case '' in {'': ''}:           return 2;
-    case [] instanceof Array:  return 3;
-    case true !== false:            return 4;
-    case !('x' < 'y' && 'y' > 'z'):          return 5;
-    case !['b', 'c'].includes('a'):        return 6;
-    case !['e', 'f'].includes('d'):      return 7;
-    default: return ok;
-  } })();
+test('Should be able to handle switches sans-condition.', () => {
+  const result = (() => {
+    switch (false) {
+      case !null: return 0;
+      case !!1: return 1;
+      case '' in { '': '' }: return 2;
+      case [] instanceof Array: return 3;
+      case true !== false: return 4;
+      case !('x' < 'y' && 'y' > 'z'): return 5;
+      case !['b', 'c'].includes('a'): return 6;
+      case !['e', 'f'].includes('d'): return 7;
+      default: return ok;
+    }
+  })();
 
   return eq(result, ok);
 });
 
 
-test("Should be able to use `@properties` within the switch clause.", function() {
-
+test('Should be able to use `@properties` within the switch clause.', () => {
   const obj = {
     num: 101,
     func() {
@@ -523,32 +532,32 @@ test("Should be able to use `@properties` within the switch clause.", function()
         case 101: return '101!';
         default: return 'other';
       }
-    }
+    },
   };
 
   return ok(obj.func() === '101!');
 });
 
 
-test("Should be able to use `@properties` within the switch cases.", function() {
-
+test('Should be able to use `@properties` within the switch cases.', () => {
   const obj = {
     num: 101,
     func(yesOrNo) {
-      const result = (() => { switch (yesOrNo) {
-        case true: return this.num;
-        default: return 'other';
-      } })();
+      const result = (() => {
+        switch (yesOrNo) {
+          case true: return this.num;
+          default: return 'other';
+        }
+      })();
       return result;
-    }
+    },
   };
 
   return ok(obj.func(true) === 101);
 });
 
 
-test("Switch with break as the return value of a loop.", function() {
-
+test('Switch with break as the return value of a loop.', () => {
   let i = 10;
   const results = (() => {
     const result = [];
@@ -568,8 +577,7 @@ test("Switch with break as the return value of a loop.", function() {
 });
 
 
-test("Issue #997. Switch doesn't fallthrough.", function() {
-
+test("Issue #997. Switch doesn't fallthrough.", () => {
   let val = 1;
   switch (true) {
     case true:
@@ -586,7 +594,7 @@ test("Issue #997. Switch doesn't fallthrough.", function() {
 
 // Throw
 
-test("Throw should be usable as an expression.", function() {
+test('Throw should be usable as an expression.', () => {
   try {
     false || (() => { throw 'up'; })();
     throw new Error('failed');
@@ -596,42 +604,45 @@ test("Throw should be usable as an expression.", function() {
 });
 
 
-test("#2555, strange function if bodies", function() {
+test('#2555, strange function if bodies', () => {
   const success = () => ok(true);
   const failure = () => ok(false);
 
   if (((() => true))()) { success(); }
 
-  if ((() => { try {
-    return false;
-  } catch (error) {} })()) { return failure(); }
+  if ((() => {
+    try {
+      return false;
+    } catch (error) {}
+  })()) { return failure(); }
 });
 
-test("#1057: `catch` or `finally` in single-line functions", function() {
-  ok((function() { try { throw 'up'; } catch (error) { return true; } })());
-  return ok((function() { try { return true; } finally {'nothing'; } })());
+test('#1057: `catch` or `finally` in single-line functions', () => {
+  ok((function () { try { throw 'up'; } catch (error) { return true; } })());
+  return ok((function () { try { return true; } finally { 'nothing'; } })());
 });
 
-test("#2367: super in for-loop", function() {
+test('#2367: super in for-loop', () => {
   class Foo {
     static initClass() {
       this.prototype.sum = 0;
     }
+
     add(val) { return this.sum += val; }
   }
   Foo.initClass();
 
   class Bar extends Foo {
     add(...vals) {
-      for (let val of Array.from(vals)) { super.add(val); }
+      for (const val of Array.from(vals)) { super.add(val); }
       return this.sum;
     }
   }
 
-  return eq(10, (new Bar).add(2, 3, 5));
+  return eq(10, (new Bar()).add(2, 3, 5));
 });
 
-test("#4267: lots of for-loops in the same scope", function() {
+test('#4267: lots of for-loops in the same scope', () => {
   // This used to include the invalid JavaScript `var do = 0`.
   const code = `\
 do ->

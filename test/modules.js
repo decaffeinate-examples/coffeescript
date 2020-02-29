@@ -1,3 +1,9 @@
+/* eslint-disable
+    no-undef,
+    no-unused-vars,
+*/
+// TODO: This file was created by bulk-decaffeinate.
+// Fix any style issues and re-enable lint.
 /*
  * decaffeinate suggestions:
  * DS102: Remove unnecessary code created because of implicit returns
@@ -43,7 +49,7 @@
 
 // Import statements
 
-test("backticked import statement", function() {
+test('backticked import statement', () => {
   const input = `\
 if Meteor.isServer
   \`import { foo, bar as baz } from 'lib'\``;
@@ -54,13 +60,13 @@ if (Meteor.isServer) {
   return eq(toJS(input), output);
 });
 
-test("import an entire module for side effects only, without importing any bindings", function() {
+test('import an entire module for side effects only, without importing any bindings', () => {
   const input = "import 'lib'";
   const output = "import 'lib';";
   return eq(toJS(input), output);
 });
 
-test("import default member from module, adding the member to the current scope", function() {
+test('import default member from module, adding the member to the current scope', () => {
   const input = `\
 import foo from 'lib'
 foo.fooMethod()`;
@@ -71,7 +77,7 @@ foo.fooMethod();`;
   return eq(toJS(input), output);
 });
 
-test("import an entire module's contents as an alias, adding the alias to the current scope", function() {
+test("import an entire module's contents as an alias, adding the alias to the current scope", () => {
   const input = `\
 import * as foo from 'lib'
 foo.fooMethod()`;
@@ -82,19 +88,19 @@ foo.fooMethod();`;
   return eq(toJS(input), output);
 });
 
-test("import empty object", function() {
+test('import empty object', () => {
   const input = "import { } from 'lib'";
   const output = "import {} from 'lib';";
   return eq(toJS(input), output);
 });
 
-test("import empty object", function() {
+test('import empty object', () => {
   const input = "import {} from 'lib'";
   const output = "import {} from 'lib';";
   return eq(toJS(input), output);
 });
 
-test("import a single member of a module, adding the member to the current scope", function() {
+test('import a single member of a module, adding the member to the current scope', () => {
   const input = `\
 import { foo } from 'lib'
 foo.fooMethod()`;
@@ -107,7 +113,7 @@ foo.fooMethod();`;
   return eq(toJS(input), output);
 });
 
-test("import a single member of a module as an alias, adding the alias to the current scope", function() {
+test('import a single member of a module as an alias, adding the alias to the current scope', () => {
   const input = `\
 import { foo as bar } from 'lib'
 bar.barMethod()`;
@@ -120,7 +126,7 @@ bar.barMethod();`;
   return eq(toJS(input), output);
 });
 
-test("import multiple members of a module, adding the members to the current scope", function() {
+test('import multiple members of a module, adding the members to the current scope', () => {
   const input = `\
 import { foo, bar } from 'lib'
 foo.fooMethod()
@@ -137,7 +143,7 @@ bar.barMethod();`;
   return eq(toJS(input), output);
 });
 
-test("import multiple members of a module where some are aliased, adding the members or aliases to the current scope", function() {
+test('import multiple members of a module where some are aliased, adding the members or aliases to the current scope', () => {
   const input = `\
 import { foo, bar as baz } from 'lib'
 foo.fooMethod()
@@ -154,7 +160,7 @@ baz.bazMethod();`;
   return eq(toJS(input), output);
 });
 
-test("import default member and other members of a module, adding the members to the current scope", function() {
+test('import default member and other members of a module, adding the members to the current scope', () => {
   const input = `\
 import foo, { bar, baz as qux } from 'lib'
 foo.fooMethod()
@@ -174,7 +180,7 @@ qux.quxMethod();`;
   return eq(toJS(input), output);
 });
 
-test("import default member from a module as well as the entire module's contents as an alias, adding the member and alias to the current scope", function() {
+test("import default member from a module as well as the entire module's contents as an alias, adding the member and alias to the current scope", () => {
   const input = `\
 import foo, * as bar from 'lib'
 foo.fooMethod()
@@ -188,7 +194,7 @@ bar.barMethod();`;
   return eq(toJS(input), output);
 });
 
-test("multiline simple import", function() {
+test('multiline simple import', () => {
   const input = `\
 import {
   foo,
@@ -202,7 +208,7 @@ import {
   return eq(toJS(input), output);
 });
 
-test("multiline complex import", function() {
+test('multiline complex import', () => {
   const input = `\
 import foo, {
   bar,
@@ -216,7 +222,7 @@ import foo, {
   return eq(toJS(input), output);
 });
 
-test("import with optional commas", function() {
+test('import with optional commas', () => {
   const input = "import { foo, bar, } from 'lib'";
   const output = `\
 import {
@@ -226,7 +232,7 @@ import {
   return eq(toJS(input), output);
 });
 
-test("multiline import without commas", function() {
+test('multiline import without commas', () => {
   const input = `\
 import {
   foo
@@ -240,7 +246,7 @@ import {
   return eq(toJS(input), output);
 });
 
-test("multiline import with optional commas", function() {
+test('multiline import with optional commas', () => {
   const input = `\
 import {
   foo,
@@ -254,7 +260,7 @@ import {
   return eq(toJS(input), output);
 });
 
-test("a variable can be assigned after an import", function() {
+test('a variable can be assigned after an import', () => {
   const input = `\
 import { foo } from 'lib'
 bar = 5`;
@@ -269,7 +275,7 @@ bar = 5;`;
   return eq(toJS(input), output);
 });
 
-test("variables can be assigned before and after an import", function() {
+test('variables can be assigned before and after an import', () => {
   const input = `\
 foo = 5
 import { bar } from 'lib'
@@ -289,20 +295,20 @@ baz = 7;`;
 
 // Export statements
 
-test("export empty object", function() {
-  const input = "export { }";
-  const output = "export {};";
+test('export empty object', () => {
+  const input = 'export { }';
+  const output = 'export {};';
   return eq(toJS(input), output);
 });
 
-test("export empty object", function() {
-  const input = "export {}";
-  const output = "export {};";
+test('export empty object', () => {
+  const input = 'export {}';
+  const output = 'export {};';
   return eq(toJS(input), output);
 });
 
-test("export named members within an object", function() {
-  const input = "export { foo, bar }";
+test('export named members within an object', () => {
+  const input = 'export { foo, bar }';
   const output = `\
 export {
   foo,
@@ -311,8 +317,8 @@ export {
   return eq(toJS(input), output);
 });
 
-test("export named members as aliases, within an object", function() {
-  const input = "export { foo as bar, baz as qux }";
+test('export named members as aliases, within an object', () => {
+  const input = 'export { foo as bar, baz as qux }';
   const output = `\
 export {
   foo as bar,
@@ -321,8 +327,8 @@ export {
   return eq(toJS(input), output);
 });
 
-test("export named members within an object, with an optional comma", function() {
-  const input = "export { foo, bar, }";
+test('export named members within an object, with an optional comma', () => {
+  const input = 'export { foo, bar, }';
   const output = `\
 export {
   foo,
@@ -331,7 +337,7 @@ export {
   return eq(toJS(input), output);
 });
 
-test("multiline export named members within an object", function() {
+test('multiline export named members within an object', () => {
   const input = `\
 export {
   foo,
@@ -345,7 +351,7 @@ export {
   return eq(toJS(input), output);
 });
 
-test("multiline export named members within an object, with an optional comma", function() {
+test('multiline export named members within an object, with an optional comma', () => {
   const input = `\
 export {
   foo,
@@ -359,19 +365,19 @@ export {
   return eq(toJS(input), output);
 });
 
-test("export default string", function() {
+test('export default string', () => {
   const input = "export default 'foo'";
   const output = "export default 'foo';";
   return eq(toJS(input), output);
 });
 
-test("export default number", function() {
-  const input = "export default 5";
-  const output = "export default 5;";
+test('export default number', () => {
+  const input = 'export default 5';
+  const output = 'export default 5;';
   return eq(toJS(input), output);
 });
 
-test("export default object", function() {
+test('export default object', () => {
   const input = "export default { foo: 'bar', baz: 'qux' }";
   const output = `\
 export default {
@@ -381,7 +387,7 @@ export default {
   return eq(toJS(input), output);
 });
 
-test("export default implicit object", function() {
+test('export default implicit object', () => {
   const input = "export default foo: 'bar', baz: 'qux'";
   const output = `\
 export default {
@@ -391,7 +397,7 @@ export default {
   return eq(toJS(input), output);
 });
 
-test("export default multiline implicit object", function() {
+test('export default multiline implicit object', () => {
   const input = `\
 export default
   foo: 'bar',
@@ -405,7 +411,7 @@ export default {
   return eq(toJS(input), output);
 });
 
-test("export default assignment expression", function() {
+test('export default assignment expression', () => {
   const input = "export default foo = 'bar'";
   const output = `\
 var foo;
@@ -414,13 +420,13 @@ export default foo = 'bar';`;
   return eq(toJS(input), output);
 });
 
-test("export assignment expression", function() {
+test('export assignment expression', () => {
   const input = "export foo = 'bar'";
   const output = "export var foo = 'bar';";
   return eq(toJS(input), output);
 });
 
-test("export multiline assignment expression", function() {
+test('export multiline assignment expression', () => {
   const input = `\
 export foo =
 'bar'`;
@@ -428,7 +434,7 @@ export foo =
   return eq(toJS(input), output);
 });
 
-test("export multiline indented assignment expression", function() {
+test('export multiline indented assignment expression', () => {
   const input = `\
 export foo =
   'bar'`;
@@ -436,13 +442,13 @@ export foo =
   return eq(toJS(input), output);
 });
 
-test("export default function", function() {
-  const input = "export default ->";
-  const output = "export default function() {};";
+test('export default function', () => {
+  const input = 'export default ->';
+  const output = 'export default function() {};';
   return eq(toJS(input), output);
 });
 
-test("export default multiline function", function() {
+test('export default multiline function', () => {
   const input = `\
 export default (foo) ->
   console.log foo`;
@@ -453,7 +459,7 @@ export default function(foo) {
   return eq(toJS(input), output);
 });
 
-test("export assignment function", function() {
+test('export assignment function', () => {
   const input = `\
 export foo = (bar) ->
   console.log bar`;
@@ -464,7 +470,7 @@ export var foo = function(bar) {
   return eq(toJS(input), output);
 });
 
-test("export assignment function which contains assignments in its body", function() {
+test('export assignment function which contains assignments in its body', () => {
   const input = `\
 export foo = (bar) ->
   baz = '!'
@@ -478,7 +484,7 @@ export var foo = function(bar) {
   return eq(toJS(input), output);
 });
 
-test("export default predefined function", function() {
+test('export default predefined function', () => {
   const input = `\
 foo = (bar) ->
   console.log bar
@@ -512,7 +518,7 @@ export default foo;`;
 // Very limited tests for now, testing that `export class foo` either compiles
 // identically (ES2015+) or at least into some function, leaving the specifics
 // vague in case the CoffeeScript `class` interpretation changes
-test("export class", function() {
+test('export class', () => {
   const input = `\
 export class foo
   baz: ->
@@ -521,18 +527,17 @@ export class foo
   return ok(/^export (class foo|var foo = \(function)/.test(toJS(input)));
 });
 
-test("export class that extends", function() {
+test('export class that extends', () => {
   const input = `\
 export class foo extends bar
   baz: ->
     console.log 'hello, world!'`;
   const output = toJS(input);
-  return ok(/export (class foo|var foo = \(function)/.test(output) && 
-    !/var foo(;|,)/.test(output)
-  );
+  return ok(/export (class foo|var foo = \(function)/.test(output)
+    && !/var foo(;|,)/.test(output));
 });
 
-test("export default class that extends", function() {
+test('export default class that extends', () => {
   const input = `\
 export default class foo extends bar
   baz: ->
@@ -540,8 +545,8 @@ export default class foo extends bar
   return ok(/export default (class foo|foo = \(function)/.test(toJS(input)));
 });
 
-test("export default named member, within an object", function() {
-  const input = "export { foo as default, bar }";
+test('export default named member, within an object', () => {
+  const input = 'export { foo as default, bar }';
   const output = `\
 export {
   foo as default,
@@ -553,13 +558,13 @@ export {
 
 // Import and export in the same statement
 
-test("export an entire module's contents", function() {
+test("export an entire module's contents", () => {
   const input = "export * from 'lib'";
   const output = "export * from 'lib';";
   return eq(toJS(input), output);
 });
 
-test("export members imported from another module", function() {
+test('export members imported from another module', () => {
   const input = "export { foo, bar } from 'lib'";
   const output = `\
 export {
@@ -569,7 +574,7 @@ export {
   return eq(toJS(input), output);
 });
 
-test("export as aliases members imported from another module", function() {
+test('export as aliases members imported from another module', () => {
   const input = "export { foo as bar, baz as qux } from 'lib'";
   const output = `\
 export {
@@ -579,7 +584,7 @@ export {
   return eq(toJS(input), output);
 });
 
-test("export list can contain CoffeeScript keywords", function() {
+test('export list can contain CoffeeScript keywords', () => {
   const input = "export { unless } from 'lib'";
   const output = `\
 export {
@@ -588,7 +593,7 @@ export {
   return eq(toJS(input), output);
 });
 
-test("export list can contain CoffeeScript keywords when aliasing", function() {
+test('export list can contain CoffeeScript keywords when aliasing', () => {
   const input = "export { when as bar, baz as unless } from 'lib'";
   const output = `\
 export {
@@ -601,7 +606,7 @@ export {
 
 // Edge cases
 
-test("multiline import with comments", function() {
+test('multiline import with comments', () => {
   const input = `\
 import {
   foo, # Not as good as bar
@@ -615,12 +620,12 @@ import {
   return eq(toJS(input), output);
 });
 
-test("`from` not part of an import or export statement can still be assigned", function() {
+test('`from` not part of an import or export statement can still be assigned', () => {
   const from = 5;
   return eq(5, from);
 });
 
-test("a variable named `from` can be assigned after an import", function() {
+test('a variable named `from` can be assigned after an import', () => {
   const input = `\
 import { foo } from 'lib'
 from = 5`;
@@ -635,7 +640,7 @@ from = 5;`;
   return eq(toJS(input), output);
 });
 
-test("`from` can be assigned after a multiline import", function() {
+test('`from` can be assigned after a multiline import', () => {
   const input = `\
 import {
   foo
@@ -652,7 +657,7 @@ from = 5;`;
   return eq(toJS(input), output);
 });
 
-test("`from` can be imported as a member name", function() {
+test('`from` can be imported as a member name', () => {
   const input = "import { from } from 'lib'";
   const output = `\
 import {
@@ -661,7 +666,7 @@ import {
   return eq(toJS(input), output);
 });
 
-test("`from` can be imported as a member name and aliased", function() {
+test('`from` can be imported as a member name and aliased', () => {
   const input = "import { from as foo } from 'lib'";
   const output = `\
 import {
@@ -670,7 +675,7 @@ import {
   return eq(toJS(input), output);
 });
 
-test("`from` can be used as an alias name", function() {
+test('`from` can be used as an alias name', () => {
   const input = "import { foo as from } from 'lib'";
   const output = `\
 import {
@@ -679,7 +684,7 @@ import {
   return eq(toJS(input), output);
 });
 
-test("`as` can be imported as a member name", function() {
+test('`as` can be imported as a member name', () => {
   const input = "import { as } from 'lib'";
   const output = `\
 import {
@@ -688,7 +693,7 @@ import {
   return eq(toJS(input), output);
 });
 
-test("`as` can be imported as a member name and aliased", function() {
+test('`as` can be imported as a member name and aliased', () => {
   const input = "import { as as foo } from 'lib'";
   const output = `\
 import {
@@ -697,7 +702,7 @@ import {
   return eq(toJS(input), output);
 });
 
-test("`as` can be used as an alias name", function() {
+test('`as` can be used as an alias name', () => {
   const input = "import { foo as as } from 'lib'";
   const output = `\
 import {
@@ -706,7 +711,7 @@ import {
   return eq(toJS(input), output);
 });
 
-test("CoffeeScript keywords can be used as imported names in import lists", function() {
+test('CoffeeScript keywords can be used as imported names in import lists', () => {
   const input = `\
 import { unless as bar } from 'lib'
 bar.barMethod()`;
@@ -719,14 +724,14 @@ bar.barMethod();`;
   return eq(toJS(input), output);
 });
 
-test("`*` can be used in an expression on the same line as an export keyword", function() {
-  let input = "export foo = (x) -> x * x";
+test('`*` can be used in an expression on the same line as an export keyword', () => {
+  let input = 'export foo = (x) -> x * x';
   let output = `\
 export var foo = function(x) {
   return x * x;
 };`;
   eq(toJS(input), output);
-  input = "export default foo = (x) -> x * x";
+  input = 'export default foo = (x) -> x * x';
   output = `\
 var foo;
 
@@ -736,7 +741,7 @@ export default foo = function(x) {
   return eq(toJS(input), output);
 });
 
-test("`*` and `from` can be used in an export default expression", function() {
+test('`*` and `from` can be used in an export default expression', () => {
   const input = `\
 export default foo.extend
   bar: ->
@@ -753,7 +758,7 @@ export default foo.extend({
   return eq(toJS(input), output);
 });
 
-test("wrapped members can be imported multiple times if aliased", function() {
+test('wrapped members can be imported multiple times if aliased', () => {
   const input = "import { foo, foo as bar } from 'lib'";
   const output = `\
 import {
@@ -763,7 +768,7 @@ import {
   return eq(toJS(input), output);
 });
 
-test("default and wrapped members can be imported multiple times if aliased", function() {
+test('default and wrapped members can be imported multiple times if aliased', () => {
   const input = "import foo, { foo as bar } from 'lib'";
   const output = `\
 import foo, {
@@ -772,7 +777,7 @@ import foo, {
   return eq(toJS(input), output);
 });
 
-test("import a member named default", function() {
+test('import a member named default', () => {
   const input = "import { default } from 'lib'";
   const output = `\
 import {
@@ -781,7 +786,7 @@ import {
   return eq(toJS(input), output);
 });
 
-test("import an aliased member named default", function() {
+test('import an aliased member named default', () => {
   const input = "import { default as def } from 'lib'";
   const output = `\
 import {
@@ -790,8 +795,8 @@ import {
   return eq(toJS(input), output);
 });
 
-test("export a member named default", function() {
-  const input = "export { default }";
+test('export a member named default', () => {
+  const input = 'export { default }';
   const output = `\
 export {
   default
@@ -799,8 +804,8 @@ export {
   return eq(toJS(input), output);
 });
 
-test("export an aliased member named default", function() {
-  const input = "export { def as default }";
+test('export an aliased member named default', () => {
+  const input = 'export { def as default }';
   const output = `\
 export {
   def as default
@@ -808,7 +813,7 @@ export {
   return eq(toJS(input), output);
 });
 
-test("import an imported member named default", function() {
+test('import an imported member named default', () => {
   const input = "import { default } from 'lib'";
   const output = `\
 import {
@@ -817,7 +822,7 @@ import {
   return eq(toJS(input), output);
 });
 
-test("import an imported aliased member named default", function() {
+test('import an imported aliased member named default', () => {
   const input = "import { default as def } from 'lib'";
   const output = `\
 import {
@@ -826,7 +831,7 @@ import {
   return eq(toJS(input), output);
 });
 
-test("export an imported member named default", function() {
+test('export an imported member named default', () => {
   const input = "export { default } from 'lib'";
   const output = `\
 export {
@@ -835,7 +840,7 @@ export {
   return eq(toJS(input), output);
 });
 
-test("export an imported aliased member named default", function() {
+test('export an imported aliased member named default', () => {
   const input = "export { default as def } from 'lib'";
   const output = `\
 export {
@@ -844,7 +849,7 @@ export {
   return eq(toJS(input), output);
 });
 
-test("#4394: export shouldn't prevent variable declarations", function() {
+test("#4394: export shouldn't prevent variable declarations", () => {
   const input = `\
 x = 1
 export { x }\
@@ -861,8 +866,8 @@ export {
   return eq(toJS(input), output);
 });
 
-test("#4451: `default` in an export statement is only treated as a keyword when it follows `export` or `as`", function() {
-  const input = "export default { default: 1 }";
+test('#4451: `default` in an export statement is only treated as a keyword when it follows `export` or `as`', () => {
+  const input = 'export default { default: 1 }';
   const output = `\
 export default {
   "default": 1
@@ -871,7 +876,7 @@ export default {
   return eq(toJS(input), output);
 });
 
-test("#4491: import- and export-specific lexing should stop after import/export statement", function() {
+test('#4491: import- and export-specific lexing should stop after import/export statement', () => {
   let input = `\
 import {
   foo,

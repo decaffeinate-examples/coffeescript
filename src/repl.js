@@ -1,3 +1,20 @@
+/* eslint-disable
+    consistent-return,
+    func-names,
+    global-require,
+    no-buffer-constructor,
+    no-console,
+    no-empty,
+    no-param-reassign,
+    no-return-assign,
+    no-underscore-dangle,
+    no-unused-vars,
+    no-use-before-define,
+    no-var,
+    prefer-destructuring,
+*/
+// TODO: This file was created by bulk-decaffeinate.
+// Fix any style issues and re-enable lint.
 /*
  * decaffeinate suggestions:
  * DS101: Remove unnecessary use of Array.from
@@ -10,7 +27,7 @@ const path = require('path');
 const vm = require('vm');
 const nodeREPL = require('repl');
 const CoffeeScript = require('./coffee-script');
-const {merge, updateSyntaxError} = require('./helpers');
+const { merge, updateSyntaxError } = require('./helpers');
 
 const replDefaults = {
   prompt: 'coffee> ',
@@ -27,7 +44,9 @@ const replDefaults = {
     input = input.replace(/^\s*try\s*{([\s\S]*)}\s*catch.*$/m, '$1');
 
     // Require AST nodes to do some AST manipulation.
-    const {Block, Assign, Value, Literal} = require('./nodes');
+    const {
+      Block, Assign, Value, Literal,
+    } = require('./nodes');
 
     try {
       // Tokenize the clean input.
@@ -40,42 +59,41 @@ const replDefaults = {
       let ast = CoffeeScript.nodes(tokens);
       // Add assignment to `_` variable to force the input to be an expression.
       ast = new Block([
-        new Assign((new Value(new Literal('__'))), ast, '=')
+        new Assign((new Value(new Literal('__'))), ast, '='),
       ]);
-      const js = ast.compile({bare: true, locals: Object.keys(context), referencedVars});
+      const js = ast.compile({ bare: true, locals: Object.keys(context), referencedVars });
       return cb(null, runInContext(js, context, filename));
     } catch (err) {
       // AST's `compile` does not add source code information to syntax errors.
       updateSyntaxError(err, input);
       return cb(err);
     }
-  }
+  },
 };
 
-var runInContext = function(js, context, filename) {
+var runInContext = function (js, context, filename) {
   if (context === global) {
     return vm.runInThisContext(js, filename);
-  } else {
-    return vm.runInContext(js, context, filename);
   }
+  return vm.runInContext(js, context, filename);
 };
 
-const addMultilineHandler = function(repl) {
-  const {rli, inputStream, outputStream} = repl;
+const addMultilineHandler = function (repl) {
+  const { rli, inputStream, outputStream } = repl;
   // Node 0.11.12 changed API, prompt is now _prompt.
   const origPrompt = repl._prompt != null ? repl._prompt : repl.prompt;
 
   const multiline = {
     enabled: false,
-    initialPrompt: origPrompt.replace(/^[^> ]*/, x => x.replace(/./g, '-')),
-    prompt: origPrompt.replace(/^[^> ]*>?/, x => x.replace(/./g, '.')),
-    buffer: ''
+    initialPrompt: origPrompt.replace(/^[^> ]*/, (x) => x.replace(/./g, '-')),
+    prompt: origPrompt.replace(/^[^> ]*>?/, (x) => x.replace(/./g, '.')),
+    buffer: '',
   };
 
   // Proxy node's line listener
   const nodeLineListener = rli.listeners('line')[0];
   rli.removeListener('line', nodeLineListener);
-  rli.on('line', function(cmd) {
+  rli.on('line', (cmd) => {
     if (multiline.enabled) {
       multiline.buffer += `${cmd}\n`;
       rli.setPrompt(multiline.prompt);
@@ -87,7 +105,7 @@ const addMultilineHandler = function(repl) {
   });
 
   // Handle Ctrl-v
-  return inputStream.on('keypress', function(char, key) {
+  return inputStream.on('keypress', (char, key) => {
     if (!key || !key.ctrl || !!key.meta || !!key.shift || (key.name !== 'v')) { return; }
     if (multiline.enabled) {
       // allow arbitrarily switching between modes any time before multiple lines are entered
@@ -118,7 +136,7 @@ const addMultilineHandler = function(repl) {
 };
 
 // Store and load command history from a file
-const addHistory = function(repl, filename, maxSize) {
+const addHistory = function (repl, filename, maxSize) {
   let lastLine = null;
   try {
     // Get file info and at most maxSize of command history
@@ -141,7 +159,7 @@ const addHistory = function(repl, filename, maxSize) {
 
   const fd = fs.openSync(filename, 'a');
 
-  repl.rli.addListener('line', function(code) {
+  repl.rli.addListener('line', (code) => {
     if (code && code.length && (code !== '.history') && (code !== '.exit') && (lastLine !== code)) {
       // Save the latest command in the file
       fs.writeSync(fd, `${code}\n`);
@@ -157,23 +175,23 @@ const addHistory = function(repl, filename, maxSize) {
     action() {
       repl.outputStream.write(`${repl.rli.history.slice().reverse().join('\n')}\n`);
       return repl.displayPrompt();
-    }
+    },
   };
 };
 
-var getCommandId = function(repl, commandName) {
+var getCommandId = function (repl, commandName) {
   // Node 0.11 changed API, a command such as '.help' is now stored as 'help'
   const commandsHaveLeadingDot = (repl.commands['.help'] != null);
-  if (commandsHaveLeadingDot) { return `.${commandName}`; } else { return commandName; }
+  if (commandsHaveLeadingDot) { return `.${commandName}`; } return commandName;
 };
 
 module.exports = {
   start(opts) {
     if (opts == null) { opts = {}; }
-    const [major, minor, build] = Array.from(process.versions.node.split('.').map(n => parseInt(n, 10)));
+    const [major, minor, build] = Array.from(process.versions.node.split('.').map((n) => parseInt(n, 10)));
 
     if ((major === 0) && (minor < 8)) {
-      console.warn("Node 0.8.0+ required for CoffeeScript REPL");
+      console.warn('Node 0.8.0+ required for CoffeeScript REPL');
       process.exit(1);
     }
 
@@ -182,11 +200,11 @@ module.exports = {
     opts = merge(replDefaults, opts);
     const repl = nodeREPL.start(opts);
     if (opts.prelude) { runInContext(opts.prelude, repl.context, 'prelude'); }
-    repl.on('exit', function() { if (!repl.rli.closed) { return repl.outputStream.write('\n'); } });
+    repl.on('exit', () => { if (!repl.rli.closed) { return repl.outputStream.write('\n'); } });
     addMultilineHandler(repl);
     if (opts.historyFile) { addHistory(repl, opts.historyFile, opts.historyMaxInputSize); }
     // Adapt help inherited from the node REPL
     repl.commands[getCommandId(repl, 'load')].help = 'Load code from a file into this REPL session';
     return repl;
-  }
+  },
 };

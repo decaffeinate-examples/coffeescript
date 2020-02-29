@@ -1,3 +1,20 @@
+/* eslint-disable
+    class-methods-use-this,
+    func-names,
+    implicit-arrow-linebreak,
+    max-classes-per-file,
+    no-constant-condition,
+    no-multi-str,
+    no-nested-ternary,
+    no-return-assign,
+    no-undef,
+    no-unused-expressions,
+    no-unused-vars,
+    operator-linebreak,
+    semi-style,
+*/
+// TODO: This file was created by bulk-decaffeinate.
+// Fix any style issues and re-enable lint.
 /*
  * decaffeinate suggestions:
  * DS102: Remove unnecessary code created because of implicit returns
@@ -12,72 +29,73 @@
 
 // Note: awkward spacing seen in some tests is likely intentional.
 
-test("comments in objects", function() {
+test('comments in objects', () => {
   const obj1 = {
   // comment
     // comment
-      // comment
+    // comment
     one: 1,
-  // comment
-    two: 2
-      // comment
+    // comment
+    two: 2,
+    // comment
   };
 
-  ok(Object.prototype.hasOwnProperty.call(obj1,'one'));
+  ok(Object.prototype.hasOwnProperty.call(obj1, 'one'));
   eq(obj1.one, 1);
-  ok(Object.prototype.hasOwnProperty.call(obj1,'two'));
+  ok(Object.prototype.hasOwnProperty.call(obj1, 'two'));
   return eq(obj1.two, 2);
 });
 
-test("comments in YAML-style objects", function() {
+test('comments in YAML-style objects', () => {
   const obj2 = {
   // comment
     // comment
-      // comment
+    // comment
     three: 3,
-  // comment
-    four: 4
+    // comment
+    four: 4,
   };
-      // comment
+  // comment
 
-  ok(Object.prototype.hasOwnProperty.call(obj2,'three'));
+  ok(Object.prototype.hasOwnProperty.call(obj2, 'three'));
   eq(obj2.three, 3);
-  ok(Object.prototype.hasOwnProperty.call(obj2,'four'));
+  ok(Object.prototype.hasOwnProperty.call(obj2, 'four'));
   return eq(obj2.four, 4);
 });
 
-test("comments following operators that continue lines", function() {
-  const sum =
-    1 +
-    1 + // comment
-    1;
+test('comments following operators that continue lines', () => {
+  const sum = 1
+    + 1 // comment
+    + 1;
   return eq(3, sum);
 });
 
-test("comments in functions", function() {
-  const fn = function() {
+test('comments in functions', () => {
+  const fn = function () {
   // comment
+
     false;
-    false;   // comment
+    false; // comment
     false;
+
     // comment
 
-  // comment
+    // comment
     return true;
   };
 
   ok(fn());
 
-  const fn2 = () => //comment
-  fn();
+  const fn2 = () => // comment
+    fn();
     // comment
 
   return ok(fn2());
 });
 
-test("trailing comment before an outdent", function() {
+test('trailing comment before an outdent', () => {
   const nonce = {};
-  const fn3 = function() {
+  const fn3 = function () {
     if (true) {
       undefined; // comment
     }
@@ -87,43 +105,44 @@ test("trailing comment before an outdent", function() {
   return eq(nonce, fn3());
 });
 
-test("comments in a switch", function() {
+test('comments in a switch', () => {
   const nonce = {};
-  const result = (() => { switch (nonce) { //comment
+  const result = (() => {
+    switch (nonce) { // comment
     // comment
-    case false: return undefined;
-    // comment
-    case null: //comment
-      return undefined;
-    default: return nonce; // comment
-  } })();
+      case false: return undefined;
+        // comment
+      case null: // comment
+        return undefined;
+      default: return nonce; // comment
+    }
+  })();
 
   return eq(nonce, result);
 });
 
-test("comment with conditional statements", function() {
+test('comment with conditional statements', () => {
   const nonce = {};
-  const result = false ? // comment
-    undefined
-  //comment
-  : // comment
+  const result = false // comment
+    ? undefined
+  // comment
+    : // comment
     nonce;
     // comment
   return eq(nonce, result);
 });
 
-test("spaced comments with conditional statements", function() {
+test('spaced comments with conditional statements', () => {
   const nonce = {};
-  const result = false ?
-    undefined
+  const result = false
+    ? undefined
 
   // comment
-  : false ?
-    undefined
+    : false
+      ? undefined
 
-  // comment
-  :
-    nonce;
+    // comment
+      : nonce;
 
   return eq(nonce, result);
 });
@@ -136,7 +155,7 @@ test("spaced comments with conditional statements", function() {
   Kind of like a heredoc.
 */
 
-test("block comments in objects", function() {
+test('block comments in objects', () => {
   const a = {};
   const b = {};
   const obj = {
@@ -144,14 +163,14 @@ test("block comments in objects", function() {
     /*
     comment
     */
-    b
+    b,
   };
 
   eq(a, obj.a);
   return eq(b, obj.b);
 });
 
-test("block comments in YAML-style", function() {
+test('block comments in YAML-style', () => {
   const a = {};
   const b = {};
   const obj = {
@@ -159,7 +178,7 @@ test("block comments in YAML-style", function() {
     /*
     comment
     */
-    b
+    b,
   };
 
   eq(a, obj.a);
@@ -167,7 +186,7 @@ test("block comments in YAML-style", function() {
 });
 
 
-test("block comments in functions", function() {
+test('block comments in functions', () => {
   const nonce = {};
 
   const fn1 = () => true
@@ -177,10 +196,10 @@ test("block comments in functions", function() {
 
   ok(fn1());
 
-  const fn2 =  () => /*
+  const fn2 = () => /*
       block comment
       */
-  nonce;
+    nonce;
 
   eq(nonce, fn2());
 
@@ -191,14 +210,14 @@ test("block comments in functions", function() {
 
   eq(nonce, fn3());
 
-  const fn4 = function() {
+  const fn4 = function () {
     let one;
-    return one = function() {
+    return one = function () {
       /*
         block comment
       */
       let two;
-      return two = function() {
+      return two = function () {
         let three;
         return three = () => nonce;
       };
@@ -208,7 +227,7 @@ test("block comments in functions", function() {
   return eq(nonce, fn4()()()());
 });
 
-test("block comments inside class bodies", function() {
+test('block comments inside class bodies', () => {
   class A {
     a() {}
 
@@ -225,6 +244,7 @@ test("block comments inside class bodies", function() {
     Comment
     */
     a() {}
+
     b() {}
   }
 
@@ -233,16 +253,15 @@ test("block comments inside class bodies", function() {
 
 test("#2037: herecomments shouldn't imply line terminators", () => (((() => /* */ fail)))());
 
-test("#2916: block comment before implicit call with implicit object", function() {
-  const fn = obj => ok(obj.a);
+test('#2916: block comment before implicit call with implicit object', () => {
+  const fn = (obj) => ok(obj.a);
   /* */
-  return fn({
-    a: true});
+  return fn({ a: true });
 });
 
-test("#3132: Format single-line block comment nicely", function() {
-  const input = `\
-### Single-line block comment without additional space here => ###`;
+test('#3132: Format single-line block comment nicely', () => {
+  const input = '\
+### Single-line block comment without additional space here => ###';
 
   const result = `\
 
@@ -250,10 +269,10 @@ test("#3132: Format single-line block comment nicely", function() {
 
 \
 `;
-  return eq(CoffeeScript.compile(input, {bare: true}), result);
+  return eq(CoffeeScript.compile(input, { bare: true }), result);
 });
 
-test("#3132: Format multi-line block comment nicely", function() {
+test('#3132: Format multi-line block comment nicely', () => {
   const input = `\
 ###
 # Multi-line
@@ -271,10 +290,10 @@ test("#3132: Format multi-line block comment nicely", function() {
 
 \
 `;
-  return eq(CoffeeScript.compile(input, {bare: true}), result);
+  return eq(CoffeeScript.compile(input, { bare: true }), result);
 });
 
-test("#3132: Format simple block comment nicely", function() {
+test('#3132: Format simple block comment nicely', () => {
   const input = `\
 ###
 No
@@ -291,10 +310,10 @@ Preceding hash
 \
 `;
 
-  return eq(CoffeeScript.compile(input, {bare: true}), result);
+  return eq(CoffeeScript.compile(input, { bare: true }), result);
 });
 
-test("#3132: Format indented block-comment nicely", function() {
+test('#3132: Format indented block-comment nicely', () => {
   const input = `\
 fn = () ->
   ###
@@ -316,12 +335,12 @@ fn = function() {
 };
 \
 `;
-  return eq(CoffeeScript.compile(input, {bare: true}), result);
+  return eq(CoffeeScript.compile(input, { bare: true }), result);
 });
 
 // Although adequately working, block comment-placement is not yet perfect.
 // (Considering a case where multiple variables have been declared …)
-test("#3132: Format jsdoc-style block-comment nicely", function() {
+test('#3132: Format jsdoc-style block-comment nicely', () => {
   const input = `\
 ###*
 # Multiline for jsdoc-"@doctags"
@@ -345,12 +364,12 @@ fn = function() {
 };
 \
 `;
-  return eq(CoffeeScript.compile(input, {bare: true}), result);
+  return eq(CoffeeScript.compile(input, { bare: true }), result);
 });
 
 // Although adequately working, block comment-placement is not yet perfect.
 // (Considering a case where multiple variables have been declared …)
-test("#3132: Format hand-made (raw) jsdoc-style block-comment nicely", function() {
+test('#3132: Format hand-made (raw) jsdoc-style block-comment nicely', () => {
   const input = `\
 ###*
  * Multiline for jsdoc-"@doctags"
@@ -374,12 +393,12 @@ fn = function() {
 };
 \
 `;
-  return eq(CoffeeScript.compile(input, {bare: true}), result);
+  return eq(CoffeeScript.compile(input, { bare: true }), result);
 });
 
 // Although adequately working, block comment-placement is not yet perfect.
 // (Considering a case where multiple variables have been declared …)
-test("#3132: Place block-comments nicely", function() {
+test('#3132: Place block-comments nicely', () => {
   const input = `\
 ###*
 # A dummy class definition
@@ -432,10 +451,10 @@ DummyClass = (function() {
 })();
 \
 `;
-  return eq(CoffeeScript.compile(input, {bare: true}), result);
+  return eq(CoffeeScript.compile(input, { bare: true }), result);
 });
 
-test("#3638: Demand a whitespace after # symbol", function() {
+test('#3638: Demand a whitespace after # symbol', () => {
   const input = `\
 ###
 #No
@@ -452,12 +471,12 @@ test("#3638: Demand a whitespace after # symbol", function() {
 \
 `;
 
-  return eq(CoffeeScript.compile(input, {bare: true}), result);
+  return eq(CoffeeScript.compile(input, { bare: true }), result);
 });
 
-test("#3761: Multiline comment at end of an object", function() {
+test('#3761: Multiline comment at end of an object', () => {
   const anObject = {
-    x: 3
+    x: 3,
     /*
      *Comment
      */
@@ -466,5 +485,5 @@ test("#3761: Multiline comment at end of an object", function() {
   return ok(anObject.x === 3);
 });
 
-test("#4375: UTF-8 characters in comments", () => // 智に働けば角が立つ、情に掉させば流される。
-ok(true));
+test('#4375: UTF-8 characters in comments', () => // 智に働けば角が立つ、情に掉させば流される。
+  ok(true));

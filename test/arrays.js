@@ -1,3 +1,20 @@
+/* eslint-disable
+    no-mixed-operators,
+    no-param-reassign,
+    no-restricted-syntax,
+    no-return-assign,
+    no-sequences,
+    no-undef,
+    no-underscore-dangle,
+    no-unused-expressions,
+    no-unused-vars,
+    no-use-before-define,
+    no-var,
+    prefer-destructuring,
+    vars-on-top,
+*/
+// TODO: This file was created by bulk-decaffeinate.
+// Fix any style issues and re-enable lint.
 /*
  * decaffeinate suggestions:
  * DS101: Remove unnecessary use of Array.from
@@ -14,8 +31,8 @@
 
 // TODO: add indexing and method invocation tests: [1][0] is 1, [].toString()
 
-test("trailing commas", function() {
-  let trailingComma = [1, 2, 3,];
+test('trailing commas', () => {
+  let trailingComma = [1, 2, 3];
   ok((trailingComma[0] === 1) && (trailingComma[2] === 3) && (trailingComma.length === 3));
 
   trailingComma = [
@@ -23,56 +40,56 @@ test("trailing commas", function() {
     4, 5, 6,
     7, 8, 9,
   ];
-  for (let n of Array.from(trailingComma)) { var sum = (sum || 0) + n; }
+  for (const n of Array.from(trailingComma)) { var sum = (sum || 0) + n; }
 
-  const a = [(x => x), (x => x * x)];
+  const a = [((x) => x), ((x) => x * x)];
   return ok(a.length === 2);
 });
 
-test("incorrect indentation without commas", function() {
+test('incorrect indentation without commas', () => {
   const result = [['a'],
-   {b: 'c'}];
+    { b: 'c' }];
   ok(result[0][0] === 'a');
-  return ok(result[1]['b'] === 'c');
+  return ok(result[1].b === 'c');
 });
 
 
 // Splats in Array Literals
 
-test("array splat expansions with assignments", function() {
-  let a, b;
+test('array splat expansions with assignments', () => {
+  let a; let
+    b;
   const nums = [1, 2, 3];
   const list = [(a = 0), ...Array.from(nums), (b = 4)];
   eq(0, a);
   eq(4, b);
-  return arrayEq([0,1,2,3,4], list);
+  return arrayEq([0, 1, 2, 3, 4], list);
 });
 
 
-test("mixed shorthand objects in array lists", function() {
-
+test('mixed shorthand objects in array lists', () => {
   let arr = [
-    {a:1},
+    { a: 1 },
     'b',
-    {c:1}
+    { c: 1 },
   ];
   ok(arr.length === 3);
   ok(arr[2].c === 1);
 
-  arr = [{b: 1, a: 2}, 100];
+  arr = [{ b: 1, a: 2 }, 100];
   eq(arr[1], 100);
 
-  arr = [{a:0, b:1}, (1 + 1)];
+  arr = [{ a: 0, b: 1 }, (1 + 1)];
   eq(arr[1], 2);
 
-  arr = [{a:1}, 'a', {b:1}, 'b'];
+  arr = [{ a: 1 }, 'a', { b: 1 }, 'b'];
   eq(arr.length, 4);
   eq(arr[2].b, 1);
   return eq(arr[3], 'b');
 });
 
 
-test("array splats with nested arrays", function() {
+test('array splats with nested arrays', () => {
   const nonce = {};
   let a = [nonce];
   let list = [1, 2, ...Array.from(a)];
@@ -84,54 +101,55 @@ test("array splats with nested arrays", function() {
   return arrayEq(list, [1, 2, [nonce]]);
 });
 
-test("#1274: `[] = a()` compiles to `false` instead of `a()`", function() {
+test('#1274: `[] = a()` compiles to `false` instead of `a()`', () => {
   let a = false;
   const fn = () => a = true;
   const array = fn();
   return ok(a);
 });
 
-test("#3194: string interpolation in array", function() {
-  let arr = [ "a",
-          {key: 'value'}
-        ];
+test('#3194: string interpolation in array', () => {
+  let arr = ['a',
+    { key: 'value' },
+  ];
   eq(2, arr.length);
   eq('a', arr[0]);
   eq('value', arr[1].key);
 
   const b = 'b';
-  arr = [ `a${b}`,
-          {key: 'value'}
-        ];
+  arr = [`a${b}`,
+    { key: 'value' },
+  ];
   eq(2, arr.length);
   eq('ab', arr[0]);
   return eq('value', arr[1].key);
 });
 
-test("regex interpolation in array", function() {
-  let arr = [ /a/,
-          {key: 'value'}
-        ];
+test('regex interpolation in array', () => {
+  let arr = [/a/,
+    { key: 'value' },
+  ];
   eq(2, arr.length);
   eq('a', arr[0].source);
   eq('value', arr[1].key);
 
   const b = 'b';
-  arr = [ new RegExp(`a${b}`),
-          {key: 'value'}
-        ];
+  arr = [new RegExp(`a${b}`),
+    { key: 'value' },
+  ];
   eq(2, arr.length);
   eq('ab', arr[0].source);
   return eq('value', arr[1].key);
 });
 
 
-test("for-from loops over Array", function() {
-  let a, b;
+test('for-from loops over Array', () => {
+  let a; let
+    b;
   let d;
   let array1 = [50, 30, 70, 20];
   let array2 = [];
-  for (let x of array1) {
+  for (const x of array1) {
     array2.push(x);
   }
   arrayEq(array1, array2);
@@ -144,9 +162,9 @@ test("for-from loops over Array", function() {
   }
   arrayEq(array2, [30, 20, 50, 40]);
 
-  array1 = [{a: 10, b: 20, c: 30}, {a: 40, b: 50, c: 60}];
+  array1 = [{ a: 10, b: 20, c: 30 }, { a: 40, b: 50, c: 60 }];
   array2 = [];
-  for ({a, b, c: d} of array1) {
+  for ({ a, b, c: d } of array1) {
     array2.push([a, b, d]);
   }
   arrayEq(array2, [[10, 20, 30], [40, 50, 60]]);
@@ -154,12 +172,13 @@ test("for-from loops over Array", function() {
   array1 = [[10, 20, 30, 40, 50]];
   return (() => {
     const result = [];
-    for (let value of array1) {
-      var adjustedLength, c;
+    for (const value of array1) {
+      var adjustedLength; var
+        c;
       a = value[0],
-        adjustedLength = Math.max(value.length, 2),
-        b = value.slice(1, adjustedLength - 1),
-        c = value[adjustedLength - 1];
+      adjustedLength = Math.max(value.length, 2),
+      b = value.slice(1, adjustedLength - 1),
+      c = value[adjustedLength - 1];
       eq(10, a);
       arrayEq([20, 30, 40], b);
       result.push(eq(50, c));
@@ -168,11 +187,13 @@ test("for-from loops over Array", function() {
   })();
 });
 
-test("for-from comprehensions over Array", function() {
-  let x, a, b;
+test('for-from comprehensions over Array', () => {
+  let x; let a; let
+    b;
   let array1 = ((() => {
     const result = [];
-    for (x of [10, 20, 30]) {       result.push(x + 10);
+    for (x of [10, 20, 30]) {
+      result.push(x + 10);
     }
     return result;
   })());
@@ -180,7 +201,8 @@ test("for-from comprehensions over Array", function() {
 
   let array2 = ((() => {
     const result1 = [];
-    for (x of [30, 41, 57]) {       if (__mod__(x, 3) === 0) {
+    for (x of [30, 41, 57]) {
+      if (__mod__(x, 3) === 0) {
         result1.push(x);
       }
     }
@@ -190,7 +212,8 @@ test("for-from comprehensions over Array", function() {
 
   array1 = ((() => {
     const result2 = [];
-    for ([a, b] of [[20, 30], [40, 50]]) {       result2.push(b + 5);
+    for ([a, b] of [[20, 30], [40, 50]]) {
+      result2.push(b + 5);
     }
     return result2;
   })());
@@ -198,7 +221,8 @@ test("for-from comprehensions over Array", function() {
 
   array2 = ((() => {
     const result3 = [];
-    for ([a, b] of [[10, 20], [30, 40], [50, 60]]) {       if ((a + b) >= 70) {
+    for ([a, b] of [[10, 20], [30, 40], [50, 60]]) {
+      if ((a + b) >= 70) {
         result3.push(a + b);
       }
     }
