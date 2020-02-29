@@ -1,486 +1,642 @@
-# Control Flow
-# ------------
+/*
+ * decaffeinate suggestions:
+ * DS101: Remove unnecessary use of Array.from
+ * DS102: Remove unnecessary code created because of implicit returns
+ * DS205: Consider reworking code to avoid use of IIFEs
+ * DS206: Consider reworking classes to avoid initClass
+ * DS207: Consider shorter variations of null checks
+ * Full docs: https://github.com/decaffeinate/decaffeinate/blob/master/docs/suggestions.md
+ */
+// Control Flow
+// ------------
 
-# * Conditionals
-# * Loops
-#   * For
-#   * While
-#   * Until
-#   * Loop
-# * Switch
-# * Throw
+// * Conditionals
+// * Loops
+//   * For
+//   * While
+//   * Until
+//   * Loop
+// * Switch
+// * Throw
 
-# TODO: make sure postfix forms and expression coercion are properly tested
+// TODO: make sure postfix forms and expression coercion are properly tested
 
-# shared identity function
-id = (_) -> if arguments.length is 1 then _ else Array::slice.call(arguments)
+// shared identity function
+const id = function(_) { if (arguments.length === 1) { return _; } else { return Array.prototype.slice.call(arguments); } };
 
-# Conditionals
+// Conditionals
 
-test "basic conditionals", ->
-  if false
-    ok false
-  else if false
-    ok false
-  else
-    ok true
+test("basic conditionals", function() {
+  if (false) {
+    ok(false);
+  } else if (false) {
+    ok(false);
+  } else {
+    ok(true);
+  }
 
-  if true
-    ok true
-  else if true
-    ok false
-  else
-    ok true
+  if (true) {
+    ok(true);
+  } else if (true) {
+    ok(false);
+  } else {
+    ok(true);
+  }
 
-  unless true
-    ok false
-  else unless true
-    ok false
-  else
-    ok true
+  if (!true) {
+    ok(false);
+  } else if (!true) {
+    ok(false);
+  } else {
+    ok(true);
+  }
 
-  unless false
-    ok true
-  else unless false
-    ok false
-  else
-    ok true
+  if (!false) {
+    return ok(true);
+  } else if (!false) {
+    return ok(false);
+  } else {
+    return ok(true);
+  }
+});
 
-test "single-line conditional", ->
-  if false then ok false else ok true
-  unless false then ok true else ok false
+test("single-line conditional", function() {
+  if (false) { ok(false); } else { ok(true); }
+  if (!false) { return ok(true); } else { return ok(false); }
+});
 
-test "nested conditionals", ->
-  nonce = {}
-  eq nonce, (if true
-    unless false
-      if false then false else
-        if true
-          nonce)
+test("nested conditionals", function() {
+  const nonce = {};
+  return eq(nonce, ((() => {
+    if (true) {
+    if (!false) {
+      if (false) { return false; } else {
+        if (true) {
+          return nonce;
+        }
+      }
+    }
+  }
+  })())
+  );
+});
 
-test "nested single-line conditionals", ->
-  nonce = {}
+test("nested single-line conditionals", function() {
+  let b;
+  const nonce = {};
 
-  a = if false then undefined else b = if 0 then undefined else nonce
-  eq nonce, a
-  eq nonce, b
+  const a = false ? undefined : (b = 0 ? undefined : nonce);
+  eq(nonce, a);
+  eq(nonce, b);
 
-  c = if false then undefined else (if 0 then undefined else nonce)
-  eq nonce, c
+  const c = false ? undefined : (0 ? undefined : nonce);
+  eq(nonce, c);
 
-  d = if true then id(if false then undefined else nonce)
-  eq nonce, d
+  const d = true ? id(false ? undefined : nonce) : undefined;
+  return eq(nonce, d);
+});
 
-test "empty conditional bodies", ->
-  eq undefined, (if false
-  else if false
-  else)
+test("empty conditional bodies", () => eq(undefined, ((() => {
+  if (false) {
+} else if (false) {} 
+else {}
+})())
+));
 
-test "conditional bodies containing only comments", ->
-  eq undefined, (if true
-    ###
+test("conditional bodies containing only comments", function() {
+  eq(undefined, (true ?
+    /*
     block comment
-    ###
-  else
-    # comment
+    */
+  undefined : undefined
+    // comment
   )
+  );
 
-  eq undefined, (if false
-    # comment
-  else if true
-    ###
+  return eq(undefined, ((() => {
+    if (false) {
+    // comment
+  } else if (true) {} 
+    /*
     block comment
-    ###
-  else)
+    */
+  else {}
+  })())
+  );
+});
 
-test "return value of if-else is from the proper body", ->
-  nonce = {}
-  eq nonce, if false then undefined else nonce
+test("return value of if-else is from the proper body", function() {
+  const nonce = {};
+  return eq(nonce, false ? undefined : nonce);
+});
 
-test "return value of unless-else is from the proper body", ->
-  nonce = {}
-  eq nonce, unless true then undefined else nonce
+test("return value of unless-else is from the proper body", function() {
+  const nonce = {};
+  return eq(nonce, !true ? undefined : nonce);
+});
 
-test "assign inside the condition of a conditional statement", ->
-  nonce = {}
-  if a = nonce then 1
-  eq nonce, a
-  1 if b = nonce
-  eq nonce, b
-
-
-# Interactions With Functions
-
-test "single-line function definition with single-line conditional", ->
-  fn = -> if 1 < 0.5 then 1 else -1
-  ok fn() is -1
-
-test "function resturns conditional value with no `else`", ->
-  fn = ->
-    return if false then true
-  eq undefined, fn()
-
-test "function returns a conditional value", ->
-  a = {}
-  fnA = ->
-    return if false then undefined else a
-  eq a, fnA()
-
-  b = {}
-  fnB = ->
-    return unless false then b else undefined
-  eq b, fnB()
-
-test "passing a conditional value to a function", ->
-  nonce = {}
-  eq nonce, id if false then undefined else nonce
-
-test "unmatched `then` should catch implicit calls", ->
-  a = 0
-  trueFn = -> true
-  if trueFn undefined then a++
-  eq 1, a
+test("assign inside the condition of a conditional statement", function() {
+  let a, b;
+  const nonce = {};
+  if (a = nonce) { 1; }
+  eq(nonce, a);
+  if (b = nonce) { 1; }
+  return eq(nonce, b);
+});
 
 
-# if-to-ternary
+// Interactions With Functions
 
-test "if-to-ternary with instanceof requires parentheses", ->
-  nonce = {}
-  eq nonce, (if {} instanceof Object
+test("single-line function definition with single-line conditional", function() {
+  const fn = function() { if (1 < 0.5) { return 1; } else { return -1; } };
+  return ok(fn() === -1);
+});
+
+test("function resturns conditional value with no `else`", function() {
+  const fn = function() {
+    if (false) { return true; }
+  };
+  return eq(undefined, fn());
+});
+
+test("function returns a conditional value", function() {
+  const a = {};
+  const fnA = function() {
+    if (false) { return undefined; } else { return a; }
+  };
+  eq(a, fnA());
+
+  const b = {};
+  const fnB = function() {
+    if (!false) { return b; } else { return undefined; }
+  };
+  return eq(b, fnB());
+});
+
+test("passing a conditional value to a function", function() {
+  const nonce = {};
+  return eq(nonce, id(false ? undefined : nonce));
+});
+
+test("unmatched `then` should catch implicit calls", function() {
+  let a = 0;
+  const trueFn = () => true;
+  if (trueFn(undefined)) { a++; }
+  return eq(1, a);
+});
+
+
+// if-to-ternary
+
+test("if-to-ternary with instanceof requires parentheses", function() {
+  const nonce = {};
+  return eq(nonce, ({} instanceof Object ?
     nonce
-  else
+  :
     undefined)
+  );
+});
 
-test "if-to-ternary as part of a larger operation requires parentheses", ->
-  ok 2, 1 + if false then 0 else 1
+test("if-to-ternary as part of a larger operation requires parentheses", () => ok(2, 1 + (false ? 0 : 1)));
 
 
-# Odd Formatting
+// Odd Formatting
 
-test "if-else indented within an assignment", ->
-  nonce = {}
-  result =
-    if false
+test("if-else indented within an assignment", function() {
+  const nonce = {};
+  const result =
+    false ?
       undefined
-    else
-      nonce
-  eq nonce, result
+    :
+      nonce;
+  return eq(nonce, result);
+});
 
-test "suppressed indentation via assignment", ->
-  nonce = {}
-  result =
-    if      false then undefined
-    else if no    then undefined
-    else if 0     then undefined
-    else if 1 < 0 then undefined
-    else               id(
-         if false then undefined
-         else          nonce
-    )
-  eq nonce, result
+test("suppressed indentation via assignment", function() {
+  const nonce = {};
+  const result =
+    false ? undefined
+    : false    ? undefined
+    : 0     ? undefined
+    : 1 < 0 ? undefined
+    :               id(
+         false ? undefined
+         :          nonce
+    );
+  return eq(nonce, result);
+});
 
-test "tight formatting with leading `then`", ->
-  nonce = {}
-  eq nonce,
-  if true
-  then nonce
-  else undefined
+test("tight formatting with leading `then`", function() {
+  const nonce = {};
+  return eq(nonce,
+  true
+  ? nonce
+  : undefined
+  );
+});
 
-test "#738: inline function defintion", ->
-  nonce = {}
-  fn = if true then -> nonce
-  eq nonce, fn()
+test("#738: inline function defintion", function() {
+  const nonce = {};
+  const fn = true ? () => nonce : undefined;
+  return eq(nonce, fn());
+});
 
-test "#748: trailing reserved identifiers", ->
-  nonce = {}
-  obj = delete: true
-  result = if obj.delete
-    nonce
-  eq nonce, result
+test("#748: trailing reserved identifiers", function() {
+  const nonce = {};
+  const obj = {delete: true};
+  const result = obj.delete ?
+    nonce : undefined;
+  return eq(nonce, result);
+});
 
-test 'if-else within an assignment, condition parenthesized', ->
-  result = if (1 is 1) then 'correct'
-  eq result, 'correct'
+test('if-else within an assignment, condition parenthesized', function() {
+  let result = (1 === 1) ? 'correct' : undefined;
+  eq(result, 'correct');
 
-  result = if ('whatever' ? no) then 'correct'
-  eq result, 'correct'
+  result = ('whatever' != null ? 'whatever' : false) ? 'correct' : undefined;
+  eq(result, 'correct');
 
-  f = -> 'wrong'
-  result = if (f?()) then 'correct' else 'wrong'
-  eq result, 'correct'
+  const f = () => 'wrong';
+  result = (typeof f === 'function' ? f() : undefined) ? 'correct' : 'wrong';
+  return eq(result, 'correct');
+});
 
-# Postfix
+// Postfix
 
-test "#3056: multiple postfix conditionals", ->
-  temp = 'initial'
-  temp = 'ignored' unless true if false
-  eq temp, 'initial'
+test("#3056: multiple postfix conditionals", function() {
+  let temp = 'initial';
+  if (false) { if (!true) { temp = 'ignored'; } }
+  return eq(temp, 'initial');
+});
 
-# Loops
+// Loops
 
-test "basic `while` loops", ->
+test("basic `while` loops", function() {
 
-  i = 5
-  list = while i -= 1
-    i * 2
-  ok list.join(' ') is "8 6 4 2"
+  let i = 5;
+  let list = (() => {
+    const result = [];
+    while ((i -= 1)) {
+      result.push(i * 2);
+    }
+    return result;
+  })();
+  ok(list.join(' ') === "8 6 4 2");
 
-  i = 5
-  list = (i * 3 while i -= 1)
-  ok list.join(' ') is "12 9 6 3"
+  i = 5;
+  list = ((() => {
+    const result1 = [];
+    while ((i -= 1)) {
+      result1.push(i * 3);
+    }
+    return result1;
+  })());
+  ok(list.join(' ') === "12 9 6 3");
 
-  i = 5
-  func   = (num) -> i -= num
-  assert = -> ok i < 5 > 0
-  results = while func 1
-    assert()
-    i
-  ok results.join(' ') is '4 3 2 1'
+  i = 5;
+  const func   = num => i -= num;
+  const assert = () => ok(i < 5 && 5 > 0);
+  let results = (() => {
+    const result2 = [];
+    while (func(1)) {
+      assert();
+      result2.push(i);
+    }
+    return result2;
+  })();
+  ok(results.join(' ') === '4 3 2 1');
 
-  i = 10
-  results = while i -= 1 when i % 2 is 0
-    i * 2
-  ok results.join(' ') is '16 12 8 4'
-
-
-test "Issue 759: `if` within `while` condition", ->
-
-  2 while if 1 then 0
-
-
-test "assignment inside the condition of a `while` loop", ->
-
-  nonce = {}
-  count = 1
-  a = nonce while count--
-  eq nonce, a
-  count = 1
-  while count--
-    b = nonce
-  eq nonce, b
-
-
-test "While over break.", ->
-
-  i = 0
-  result = while i < 10
-    i++
-    break
-  arrayEq result, []
-
-
-test "While over continue.", ->
-
-  i = 0
-  result = while i < 10
-    i++
-    continue
-  arrayEq result, []
+  i = 10;
+  results = (() => {
+    const result3 = [];
+    while ((i -= 1)) {
+      if ((i % 2) === 0) {
+        result3.push(i * 2);
+      }
+    }
+    return result3;
+  })();
+  return ok(results.join(' ') === '16 12 8 4');
+});
 
 
-test "Basic `until`", ->
-
-  value = false
-  i = 0
-  results = until value
-    value = true if i is 5
-    i++
-  ok i is 6
-
-
-test "Basic `loop`", ->
-
-  i = 5
-  list = []
-  loop
-    i -= 1
-    break if i is 0
-    list.push i * 2
-  ok list.join(' ') is '8 6 4 2'
+test("Issue 759: `if` within `while` condition", () => (() => {
+  const result = [];
+  while (1 ? 0 : undefined) {
+    result.push(2);
+  }
+  return result;
+})());
 
 
-test "break at the top level", ->
-  for i in [1,2,3]
-    result = i
-    if i == 2
-      break
-  eq 2, result
+test("assignment inside the condition of a `while` loop", function() {
 
-test "break *not* at the top level", ->
-  someFunc = ->
-    i = 0
-    while ++i < 3
-      result = i
-      break if i > 1
-    result
-  eq 2, someFunc()
-
-# Switch
-
-test "basic `switch`", ->
-
-  num = 10
-  result = switch num
-    when 5 then false
-    when 'a'
-      true
-      true
-      false
-    when 10 then true
+  let a, b;
+  const nonce = {};
+  let count = 1;
+  while (count--) { a = nonce; }
+  eq(nonce, a);
+  count = 1;
+  while (count--) {
+    b = nonce;
+  }
+  return eq(nonce, b);
+});
 
 
-    # Mid-switch comment with whitespace
-    # and multi line
-    when 11 then false
-    else false
+test("While over break.", function() {
 
-  ok result
-
-
-  func = (num) ->
-    switch num
-      when 2, 4, 6
-        true
-      when 1, 3, 5
-        false
-
-  ok func(2)
-  ok func(6)
-  ok !func(3)
-  eq func(8), undefined
+  let i = 0;
+  const result = (() => {
+    const result1 = [];
+    while (i < 10) {
+      i++;
+      break;
+    }
+    return result1;
+  })();
+  return arrayEq(result, []);
+});
 
 
-test "Ensure that trailing switch elses don't get rewritten.", ->
+test("While over continue.", function() {
 
-  result = false
-  switch "word"
-    when "one thing"
-      doSomething()
-    else
-      result = true unless false
-
-  ok result
-
-  result = false
-  switch "word"
-    when "one thing"
-      doSomething()
-    when "other thing"
-      doSomething()
-    else
-      result = true unless false
-
-  ok result
+  let i = 0;
+  const result = (() => {
+    const result1 = [];
+    while (i < 10) {
+      i++;
+      continue;
+    }
+    return result1;
+  })();
+  return arrayEq(result, []);
+});
 
 
-test "Should be able to handle switches sans-condition.", ->
+test("Basic `until`", function() {
 
-  result = switch
-    when null                     then 0
-    when !1                       then 1
-    when '' not of {''}           then 2
-    when [] not instanceof Array  then 3
-    when true is false            then 4
-    when 'x' < 'y' > 'z'          then 5
-    when 'a' in ['b', 'c']        then 6
-    when 'd' in (['e', 'f'])      then 7
-    else ok
+  let value;
+  value = false;
+  let i = 0;
+  const results = (() => {
+    const result = [];
+    while (!value) {
+      if (i === 5) { value = true; }
+      result.push(i++);
+    }
+    return result;
+  })();
+  return ok(i === 6);
+});
 
-  eq result, ok
+
+test("Basic `loop`", function() {
+
+  let i = 5;
+  const list = [];
+  while (true) {
+    i -= 1;
+    if (i === 0) { break; }
+    list.push(i * 2);
+  }
+  return ok(list.join(' ') === '8 6 4 2');
+});
 
 
-test "Should be able to use `@properties` within the switch clause.", ->
+test("break at the top level", function() {
+  let result;
+  for (let i of [1,2,3]) {
+    result = i;
+    if (i === 2) {
+      break;
+    }
+  }
+  return eq(2, result);
+});
 
-  obj = {
-    num: 101
-    func: ->
-      switch @num
-        when 101 then '101!'
-        else 'other'
+test("break *not* at the top level", function() {
+  const someFunc = function() {
+    let result;
+    let i = 0;
+    while (++i < 3) {
+      result = i;
+      if (i > 1) { break; }
+    }
+    return result;
+  };
+  return eq(2, someFunc());
+});
+
+// Switch
+
+test("basic `switch`", function() {
+
+  const num = 10;
+  const result = (() => { switch (num) {
+    case 5: return false;
+    case 'a':
+      true;
+      true;
+      return false;
+    case 10: return true;
+
+
+    // Mid-switch comment with whitespace
+    // and multi line
+    case 11: return false;
+    default: return false;
+  } })();
+
+  ok(result);
+
+
+  const func = function(num) {
+    switch (num) {
+      case 2: case 4: case 6:
+        return true;
+      case 1: case 3: case 5:
+        return false;
+    }
+  };
+
+  ok(func(2));
+  ok(func(6));
+  ok(!func(3));
+  return eq(func(8), undefined);
+});
+
+
+test("Ensure that trailing switch elses don't get rewritten.", function() {
+
+  let result = false;
+  switch ("word") {
+    case "one thing":
+      doSomething();
+      break;
+    default:
+      if (!false) { result = true; }
   }
 
-  ok obj.func() is '101!'
+  ok(result);
 
-
-test "Should be able to use `@properties` within the switch cases.", ->
-
-  obj = {
-    num: 101
-    func: (yesOrNo) ->
-      result = switch yesOrNo
-        when yes then @num
-        else 'other'
-      result
+  result = false;
+  switch ("word") {
+    case "one thing":
+      doSomething();
+      break;
+    case "other thing":
+      doSomething();
+      break;
+    default:
+      if (!false) { result = true; }
   }
 
-  ok obj.func(yes) is 101
+  return ok(result);
+});
 
 
-test "Switch with break as the return value of a loop.", ->
+test("Should be able to handle switches sans-condition.", function() {
 
-  i = 10
-  results = while i > 0
-    i--
-    switch i % 2
-      when 1 then i
-      when 0 then break
+  const result = (() => { switch (false) {
+    case !null:                     return 0;
+    case !!1:                       return 1;
+    case '' in {'': ''}:           return 2;
+    case [] instanceof Array:  return 3;
+    case true !== false:            return 4;
+    case !('x' < 'y' && 'y' > 'z'):          return 5;
+    case !['b', 'c'].includes('a'):        return 6;
+    case !['e', 'f'].includes('d'):      return 7;
+    default: return ok;
+  } })();
 
-  eq results.join(', '), '9, 7, 5, 3, 1'
-
-
-test "Issue #997. Switch doesn't fallthrough.", ->
-
-  val = 1
-  switch true
-    when true
-      if false
-        return 5
-    else
-      val = 2
-
-  eq val, 1
-
-# Throw
-
-test "Throw should be usable as an expression.", ->
-  try
-    false or throw 'up'
-    throw new Error 'failed'
-  catch e
-    ok e is 'up'
+  return eq(result, ok);
+});
 
 
-test "#2555, strange function if bodies", ->
-  success = -> ok true
-  failure = -> ok false
+test("Should be able to use `@properties` within the switch clause.", function() {
 
-  success() if do ->
-    yes
+  const obj = {
+    num: 101,
+    func() {
+      switch (this.num) {
+        case 101: return '101!';
+        default: return 'other';
+      }
+    }
+  };
 
-  failure() if try
-    false
+  return ok(obj.func() === '101!');
+});
 
-test "#1057: `catch` or `finally` in single-line functions", ->
-  ok do -> try throw 'up' catch then yes
-  ok do -> try yes finally 'nothing'
 
-test "#2367: super in for-loop", ->
-  class Foo
-    sum: 0
-    add: (val) -> @sum += val
+test("Should be able to use `@properties` within the switch cases.", function() {
 
-  class Bar extends Foo
-    add: (vals...) ->
-      super val for val in vals
-      @sum
+  const obj = {
+    num: 101,
+    func(yesOrNo) {
+      const result = (() => { switch (yesOrNo) {
+        case true: return this.num;
+        default: return 'other';
+      } })();
+      return result;
+    }
+  };
 
-  eq 10, (new Bar).add 2, 3, 5
+  return ok(obj.func(true) === 101);
+});
 
-test "#4267: lots of for-loops in the same scope", ->
-  # This used to include the invalid JavaScript `var do = 0`.
-  code = """
-    do ->
-      #{Array(200).join('for [0..0] then\n  ')}
-      true
-  """
-  ok CoffeeScript.eval(code)
+
+test("Switch with break as the return value of a loop.", function() {
+
+  let i = 10;
+  const results = (() => {
+    const result = [];
+    while (i > 0) {
+      i--;
+      switch (i % 2) {
+        case 1: result.push(i); break;
+        case 0: break;
+        default:
+          result.push(undefined);
+      }
+    }
+    return result;
+  })();
+
+  return eq(results.join(', '), '9, 7, 5, 3, 1');
+});
+
+
+test("Issue #997. Switch doesn't fallthrough.", function() {
+
+  let val = 1;
+  switch (true) {
+    case true:
+      if (false) {
+        return 5;
+      }
+      break;
+    default:
+      val = 2;
+  }
+
+  return eq(val, 1);
+});
+
+// Throw
+
+test("Throw should be usable as an expression.", function() {
+  try {
+    false || (() => { throw 'up'; })();
+    throw new Error('failed');
+  } catch (e) {
+    return ok(e === 'up');
+  }
+});
+
+
+test("#2555, strange function if bodies", function() {
+  const success = () => ok(true);
+  const failure = () => ok(false);
+
+  if (((() => true))()) { success(); }
+
+  if ((() => { try {
+    return false;
+  } catch (error) {} })()) { return failure(); }
+});
+
+test("#1057: `catch` or `finally` in single-line functions", function() {
+  ok((function() { try { throw 'up'; } catch (error) { return true; } })());
+  return ok((function() { try { return true; } finally {'nothing'; } })());
+});
+
+test("#2367: super in for-loop", function() {
+  class Foo {
+    static initClass() {
+      this.prototype.sum = 0;
+    }
+    add(val) { return this.sum += val; }
+  }
+  Foo.initClass();
+
+  class Bar extends Foo {
+    add(...vals) {
+      for (let val of Array.from(vals)) { super.add(val); }
+      return this.sum;
+    }
+  }
+
+  return eq(10, (new Bar).add(2, 3, 5));
+});
+
+test("#4267: lots of for-loops in the same scope", function() {
+  // This used to include the invalid JavaScript `var do = 0`.
+  const code = `\
+do ->
+  ${Array(200).join('for [0..0] then\n  ')}
+  true\
+`;
+  return ok(CoffeeScript.eval(code));
+});

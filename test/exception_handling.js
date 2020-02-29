@@ -1,142 +1,178 @@
-# Exception Handling
-# ------------------
+/*
+ * decaffeinate suggestions:
+ * DS102: Remove unnecessary code created because of implicit returns
+ * DS205: Consider reworking code to avoid use of IIFEs
+ * Full docs: https://github.com/decaffeinate/decaffeinate/blob/master/docs/suggestions.md
+ */
+// Exception Handling
+// ------------------
 
-# shared nonce
-nonce = {}
-
-
-# Throw
-
-test "basic exception throwing", ->
-  throws (-> throw 'error'), 'error'
-
-
-# Empty Try/Catch/Finally
-
-test "try can exist alone", ->
-  try
-
-test "try/catch with empty try, empty catch", ->
-  try
-    # nothing
-  catch err
-    # nothing
-
-test "single-line try/catch with empty try, empty catch", ->
-  try catch err
-
-test "try/finally with empty try, empty finally", ->
-  try
-    # nothing
-  finally
-    # nothing
-
-test "single-line try/finally with empty try, empty finally", ->
-  try finally
-
-test "try/catch/finally with empty try, empty catch, empty finally", ->
-  try
-  catch err
-  finally
-
-test "single-line try/catch/finally with empty try, empty catch, empty finally", ->
-  try catch err then finally
+// shared nonce
+const nonce = {};
 
 
-# Try/Catch/Finally as an Expression
+// Throw
 
-test "return the result of try when no exception is thrown", ->
-  result = try
-    nonce
-  catch err
-    undefined
-  finally
-    undefined
-  eq nonce, result
-
-test "single-line result of try when no exception is thrown", ->
-  result = try nonce catch err then undefined
-  eq nonce, result
-
-test "return the result of catch when an exception is thrown", ->
-  fn = ->
-    try
-      throw ->
-    catch err
-      nonce
-  doesNotThrow fn
-  eq nonce, fn()
-
-test "single-line result of catch when an exception is thrown", ->
-  fn = ->
-    try throw (->) catch err then nonce
-  doesNotThrow fn
-  eq nonce, fn()
-
-test "optional catch", ->
-  fn = ->
-    try throw ->
-    nonce
-  doesNotThrow fn
-  eq nonce, fn()
+test("basic exception throwing", () => throws((function() { throw 'error'; }), 'error'));
 
 
-# Try/Catch/Finally Interaction With Other Constructs
+// Empty Try/Catch/Finally
 
-test "try/catch with empty catch as last statement in a function body", ->
-  fn = ->
-    try nonce
-    catch err
-  eq nonce, fn()
+test("try can exist alone", function() {
+  try {} catch (error) {}
+});
+
+test("try/catch with empty try, empty catch", function() {
+  try {}
+    // nothing
+  catch (err) {}
+});
+    // nothing
+
+test("single-line try/catch with empty try, empty catch", function() {
+  try {} catch (err) {}
+});
+
+test("try/finally with empty try, empty finally", function() {
+  try {}
+    // nothing
+  finally {}
+});
+    // nothing
+
+test("single-line try/finally with empty try, empty finally", function() {
+  try {} finally {}
+});
+
+test("try/catch/finally with empty try, empty catch, empty finally", function() {
+  try {}
+  catch (err) {}
+  finally {}
+});
+
+test("single-line try/catch/finally with empty try, empty catch, empty finally", function() {
+  try {} catch (err) {} finally {}
+});
 
 
-# Catch leads to broken scoping: #1595
+// Try/Catch/Finally as an Expression
 
-test "try/catch with a reused variable name.", ->
-  do ->
-    try
-      inner = 5
-    catch inner
-      # nothing
-  eq typeof inner, 'undefined'
+test("return the result of try when no exception is thrown", function() {
+  const result = (() => { try {
+    return nonce;
+  } catch (err) {
+    return undefined;
+  }
+  finally {
+    undefined;
+  } })();
+  return eq(nonce, result);
+});
+
+test("single-line result of try when no exception is thrown", function() {
+  const result = (() => { try { return nonce; } catch (err) { return undefined; } })();
+  return eq(nonce, result);
+});
+
+test("return the result of catch when an exception is thrown", function() {
+  const fn = function() {
+    try {
+      throw function() {};
+    } catch (err) {
+      return nonce;
+    }
+  };
+  doesNotThrow(fn);
+  return eq(nonce, fn());
+});
+
+test("single-line result of catch when an exception is thrown", function() {
+  const fn = function() {
+    try { throw (function() {}); } catch (err) { return nonce; }
+  };
+  doesNotThrow(fn);
+  return eq(nonce, fn());
+});
+
+test("optional catch", function() {
+  const fn = function() {
+    try { throw function() {}; } catch (error) {}
+    return nonce;
+  };
+  doesNotThrow(fn);
+  return eq(nonce, fn());
+});
 
 
-# Allowed to destructure exceptions: #2580
+// Try/Catch/Finally Interaction With Other Constructs
 
-test "try/catch with destructuring the exception object", ->
-
-  result = try
-    missing.object
-  catch {message}
-    message
-
-  eq message, 'missing is not defined'
-
+test("try/catch with empty catch as last statement in a function body", function() {
+  const fn = function() {
+    try { return nonce; }
+    catch (err) {}
+  };
+  return eq(nonce, fn());
+});
 
 
-test "Try catch finally as implicit arguments", ->
-  first = (x) -> x
+// Catch leads to broken scoping: #1595
 
-  foo = no
-  try
-    first try iamwhoiam() finally foo = yes
-  catch e
-  eq foo, yes
+test("try/catch with a reused variable name.", function() {
+  (function() {
+    let inner;
+    try {
+      return inner = 5;
+    } catch (error) { return inner = error; }
+  })();
+      // nothing
+  return eq(typeof inner, 'undefined');
+});
 
-  bar = no
-  try
-    first try iamwhoiam() catch e finally
-    bar = yes
-  catch e
-  eq bar, yes
 
-# Catch Should Not Require Param: #2900
-test "parameter-less catch clause", ->
-  try
-    throw new Error 'failed'
-  catch
-    ok true
+// Allowed to destructure exceptions: #2580
 
-  try throw new Error 'failed' catch finally ok true
+test("try/catch with destructuring the exception object", function() {
 
-  ok try throw new Error 'failed' catch then true
+  let message;
+  const result = (() => { try {
+    return missing.object;
+  } catch (error) {
+    ({message} = error);
+    return message;
+  } })();
+
+  return eq(message, 'missing is not defined');
+});
+
+
+
+test("Try catch finally as implicit arguments", function() {
+  let foo, e;
+  const first = x => x;
+
+  foo = false;
+  try {
+    first((() => { try { return iamwhoiam(); } finally {foo = true; } })());
+  } catch (error) { e = error; }
+  eq(foo, true);
+
+  let bar = false;
+  try {
+    first((() => { try { return iamwhoiam(); } catch (error1) { return e = error1; } finally {} })());
+    bar = true;
+  } catch (error2) { e = error2; }
+  return eq(bar, true);
+});
+
+// Catch Should Not Require Param: #2900
+test("parameter-less catch clause", function() {
+  try {
+    throw new Error('failed');
+  } catch (error) {
+    ok(true);
+  }
+
+  try { throw new Error('failed'); } catch (error1) {} finally {ok(true); }
+
+  return ok((() => { try { throw new Error('failed'); } catch (error2) { return true; } })());
+});

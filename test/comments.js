@@ -1,433 +1,470 @@
-# Comments
-# --------
+/*
+ * decaffeinate suggestions:
+ * DS102: Remove unnecessary code created because of implicit returns
+ * DS205: Consider reworking code to avoid use of IIFEs
+ * Full docs: https://github.com/decaffeinate/decaffeinate/blob/master/docs/suggestions.md
+ */
+// Comments
+// --------
 
-# * Single-Line Comments
-# * Block Comments
+// * Single-Line Comments
+// * Block Comments
 
-# Note: awkward spacing seen in some tests is likely intentional.
+// Note: awkward spacing seen in some tests is likely intentional.
 
-test "comments in objects", ->
-  obj1 = {
-  # comment
-    # comment
-      # comment
-    one: 1
-  # comment
+test("comments in objects", function() {
+  const obj1 = {
+  // comment
+    // comment
+      // comment
+    one: 1,
+  // comment
     two: 2
-      # comment
-  }
+      // comment
+  };
 
-  ok Object::hasOwnProperty.call(obj1,'one')
-  eq obj1.one, 1
-  ok Object::hasOwnProperty.call(obj1,'two')
-  eq obj1.two, 2
+  ok(Object.prototype.hasOwnProperty.call(obj1,'one'));
+  eq(obj1.one, 1);
+  ok(Object.prototype.hasOwnProperty.call(obj1,'two'));
+  return eq(obj1.two, 2);
+});
 
-test "comments in YAML-style objects", ->
-  obj2 =
-  # comment
-    # comment
-      # comment
-    three: 3
-  # comment
+test("comments in YAML-style objects", function() {
+  const obj2 = {
+  // comment
+    // comment
+      // comment
+    three: 3,
+  // comment
     four: 4
-      # comment
+  };
+      // comment
 
-  ok Object::hasOwnProperty.call(obj2,'three')
-  eq obj2.three, 3
-  ok Object::hasOwnProperty.call(obj2,'four')
-  eq obj2.four, 4
+  ok(Object.prototype.hasOwnProperty.call(obj2,'three'));
+  eq(obj2.three, 3);
+  ok(Object.prototype.hasOwnProperty.call(obj2,'four'));
+  return eq(obj2.four, 4);
+});
 
-test "comments following operators that continue lines", ->
-  sum =
+test("comments following operators that continue lines", function() {
+  const sum =
     1 +
-    1 + # comment
-    1
-  eq 3, sum
+    1 + // comment
+    1;
+  return eq(3, sum);
+});
 
-test "comments in functions", ->
-  fn = ->
-  # comment
-    false
-    false   # comment
-    false
-    # comment
+test("comments in functions", function() {
+  const fn = function() {
+  // comment
+    false;
+    false;   // comment
+    false;
+    // comment
 
-  # comment
-    true
+  // comment
+    return true;
+  };
 
-  ok fn()
+  ok(fn());
 
-  fn2 = -> #comment
-    fn()
-    # comment
+  const fn2 = () => //comment
+  fn();
+    // comment
 
-  ok fn2()
+  return ok(fn2());
+});
 
-test "trailing comment before an outdent", ->
-  nonce = {}
-  fn3 = ->
-    if true
-      undefined # comment
-    nonce
+test("trailing comment before an outdent", function() {
+  const nonce = {};
+  const fn3 = function() {
+    if (true) {
+      undefined; // comment
+    }
+    return nonce;
+  };
 
-  eq nonce, fn3()
+  return eq(nonce, fn3());
+});
 
-test "comments in a switch", ->
-  nonce = {}
-  result = switch nonce #comment
-    # comment
-    when false then undefined
-    # comment
-    when null #comment
-      undefined
-    else nonce # comment
+test("comments in a switch", function() {
+  const nonce = {};
+  const result = (() => { switch (nonce) { //comment
+    // comment
+    case false: return undefined;
+    // comment
+    case null: //comment
+      return undefined;
+    default: return nonce; // comment
+  } })();
 
-  eq nonce, result
+  return eq(nonce, result);
+});
 
-test "comment with conditional statements", ->
-  nonce = {}
-  result = if false # comment
+test("comment with conditional statements", function() {
+  const nonce = {};
+  const result = false ? // comment
     undefined
-  #comment
-  else # comment
-    nonce
-    # comment
-  eq nonce, result
+  //comment
+  : // comment
+    nonce;
+    // comment
+  return eq(nonce, result);
+});
 
-test "spaced comments with conditional statements", ->
-  nonce = {}
-  result = if false
+test("spaced comments with conditional statements", function() {
+  const nonce = {};
+  const result = false ?
     undefined
 
-  # comment
-  else if false
+  // comment
+  : false ?
     undefined
 
-  # comment
-  else
-    nonce
+  // comment
+  :
+    nonce;
 
-  eq nonce, result
+  return eq(nonce, result);
+});
 
 
-# Block Comments
+// Block Comments
 
-###
+/*
   This is a here-comment.
   Kind of like a heredoc.
-###
+*/
 
-test "block comments in objects", ->
-  a = {}
-  b = {}
-  obj = {
-    a: a
-    ###
+test("block comments in objects", function() {
+  const a = {};
+  const b = {};
+  const obj = {
+    a,
+    /*
     comment
-    ###
-    b: b
-  }
+    */
+    b
+  };
 
-  eq a, obj.a
-  eq b, obj.b
+  eq(a, obj.a);
+  return eq(b, obj.b);
+});
 
-test "block comments in YAML-style", ->
-  a = {}
-  b = {}
-  obj =
-    a: a
-    ###
+test("block comments in YAML-style", function() {
+  const a = {};
+  const b = {};
+  const obj = {
+    a,
+    /*
     comment
-    ###
-    b: b
+    */
+    b
+  };
 
-  eq a, obj.a
-  eq b, obj.b
+  eq(a, obj.a);
+  return eq(b, obj.b);
+});
 
 
-test "block comments in functions", ->
-  nonce = {}
+test("block comments in functions", function() {
+  const nonce = {};
 
-  fn1 = ->
-    true
-    ###
-    false
-    ###
+  const fn1 = () => true
+  /*
+      false
+      */;
 
-  ok fn1()
+  ok(fn1());
 
-  fn2 =  ->
-    ###
-    block comment
-    ###
-    nonce
+  const fn2 =  () => /*
+      block comment
+      */
+  nonce;
 
-  eq nonce, fn2()
+  eq(nonce, fn2());
 
-  fn3 = ->
-    nonce
-  ###
+  const fn3 = () => nonce;
+  /*
   block comment
-  ###
+  */
 
-  eq nonce, fn3()
+  eq(nonce, fn3());
 
-  fn4 = ->
-    one = ->
-      ###
+  const fn4 = function() {
+    let one;
+    return one = function() {
+      /*
         block comment
-      ###
-      two = ->
-        three = ->
-          nonce
+      */
+      let two;
+      return two = function() {
+        let three;
+        return three = () => nonce;
+      };
+    };
+  };
 
-  eq nonce, fn4()()()()
+  return eq(nonce, fn4()()()());
+});
 
-test "block comments inside class bodies", ->
-  class A
-    a: ->
-
-    ###
-    Comment
-    ###
-    b: ->
-
-  ok A.prototype.b instanceof Function
-
-  class B
-    ###
-    Comment
-    ###
-    a: ->
-    b: ->
-
-  ok B.prototype.a instanceof Function
-
-test "#2037: herecomments shouldn't imply line terminators", ->
-  do (-> ### ###; fail)
-
-test "#2916: block comment before implicit call with implicit object", ->
-  fn = (obj) -> ok obj.a
-  ### ###
-  fn
-    a: yes
-
-test "#3132: Format single-line block comment nicely", ->
-  input = """
-  ### Single-line block comment without additional space here => ###"""
-
-  result = """
-
-  /* Single-line block comment without additional space here => */
-
-
-  """
-  eq CoffeeScript.compile(input, bare: on), result
-
-test "#3132: Format multi-line block comment nicely", ->
-  input = """
-  ###
-  # Multi-line
-  # block
-  # comment
-  ###"""
-
-  result = """
-
-  /*
-   * Multi-line
-   * block
-   * comment
-   */
-
-
-  """
-  eq CoffeeScript.compile(input, bare: on), result
-
-test "#3132: Format simple block comment nicely", ->
-  input = """
-  ###
-  No
-  Preceding hash
-  ###"""
-
-  result = """
-
-  /*
-  No
-  Preceding hash
-   */
-
-
-  """
-
-  eq CoffeeScript.compile(input, bare: on), result
-
-test "#3132: Format indented block-comment nicely", ->
-  input = """
-  fn = () ->
-    ###
-    # Indented
-    Multiline
-    ###
-    1"""
-
-  result = """
-  var fn;
-
-  fn = function() {
+test("block comments inside class bodies", function() {
+  class A {
+    a() {}
 
     /*
-     * Indented
-    Multiline
-     */
-    return 1;
-  };
+    Comment
+    */
+    b() {}
+  }
 
-  """
-  eq CoffeeScript.compile(input, bare: on), result
+  ok(A.prototype.b instanceof Function);
 
-# Although adequately working, block comment-placement is not yet perfect.
-# (Considering a case where multiple variables have been declared …)
-test "#3132: Format jsdoc-style block-comment nicely", ->
-  input = """
-  ###*
-  # Multiline for jsdoc-"@doctags"
-  #
-  # @type {Function}
+  class B {
+    /*
+    Comment
+    */
+    a() {}
+    b() {}
+  }
+
+  return ok(B.prototype.a instanceof Function);
+});
+
+test("#2037: herecomments shouldn't imply line terminators", () => (((() => /* */ fail)))());
+
+test("#2916: block comment before implicit call with implicit object", function() {
+  const fn = obj => ok(obj.a);
+  /* */
+  return fn({
+    a: true});
+});
+
+test("#3132: Format single-line block comment nicely", function() {
+  const input = `\
+### Single-line block comment without additional space here => ###`;
+
+  const result = `\
+
+/* Single-line block comment without additional space here => */
+
+\
+`;
+  return eq(CoffeeScript.compile(input, {bare: true}), result);
+});
+
+test("#3132: Format multi-line block comment nicely", function() {
+  const input = `\
+###
+# Multi-line
+# block
+# comment
+###`;
+
+  const result = `\
+
+/*
+ * Multi-line
+ * block
+ * comment
+ */
+
+\
+`;
+  return eq(CoffeeScript.compile(input, {bare: true}), result);
+});
+
+test("#3132: Format simple block comment nicely", function() {
+  const input = `\
+###
+No
+Preceding hash
+###`;
+
+  const result = `\
+
+/*
+No
+Preceding hash
+ */
+
+\
+`;
+
+  return eq(CoffeeScript.compile(input, {bare: true}), result);
+});
+
+test("#3132: Format indented block-comment nicely", function() {
+  const input = `\
+fn = () ->
   ###
-  fn = () -> 1
-  """
-
-  result = """
-
-  /**
-   * Multiline for jsdoc-"@doctags"
-   *
-   * @type {Function}
-   */
-  var fn;
-
-  fn = function() {
-    return 1;
-  };
-
-  """
-  eq CoffeeScript.compile(input, bare: on), result
-
-# Although adequately working, block comment-placement is not yet perfect.
-# (Considering a case where multiple variables have been declared …)
-test "#3132: Format hand-made (raw) jsdoc-style block-comment nicely", ->
-  input = """
-  ###*
-   * Multiline for jsdoc-"@doctags"
-   *
-   * @type {Function}
+  # Indented
+  Multiline
   ###
-  fn = () -> 1
-  """
+  1`;
 
-  result = """
+  const result = `\
+var fn;
 
-  /**
-   * Multiline for jsdoc-"@doctags"
-   *
-   * @type {Function}
-   */
-  var fn;
-
-  fn = function() {
-    return 1;
-  };
-
-  """
-  eq CoffeeScript.compile(input, bare: on), result
-
-# Although adequately working, block comment-placement is not yet perfect.
-# (Considering a case where multiple variables have been declared …)
-test "#3132: Place block-comments nicely", ->
-  input = """
-  ###*
-  # A dummy class definition
-  #
-  # @class
-  ###
-  class DummyClass
-
-    ###*
-    # @constructor
-    ###
-    constructor: ->
-
-    ###*
-    # Singleton reference
-    #
-    # @type {DummyClass}
-    ###
-    @instance = new DummyClass()
-
-  """
-
-  result = """
-
-  /**
-   * A dummy class definition
-   *
-   * @class
-   */
-  var DummyClass;
-
-  DummyClass = (function() {
-
-    /**
-     * @constructor
-     */
-    function DummyClass() {}
-
-
-    /**
-     * Singleton reference
-     *
-     * @type {DummyClass}
-     */
-
-    DummyClass.instance = new DummyClass();
-
-    return DummyClass;
-
-  })();
-
-  """
-  eq CoffeeScript.compile(input, bare: on), result
-
-test "#3638: Demand a whitespace after # symbol", ->
-  input = """
-  ###
-  #No
-  #whitespace
-  ###"""
-
-  result = """
+fn = function() {
 
   /*
-  #No
-  #whitespace
+   * Indented
+  Multiline
+   */
+  return 1;
+};
+\
+`;
+  return eq(CoffeeScript.compile(input, {bare: true}), result);
+});
+
+// Although adequately working, block comment-placement is not yet perfect.
+// (Considering a case where multiple variables have been declared …)
+test("#3132: Format jsdoc-style block-comment nicely", function() {
+  const input = `\
+###*
+# Multiline for jsdoc-"@doctags"
+#
+# @type {Function}
+###
+fn = () -> 1\
+`;
+
+  const result = `\
+
+/**
+ * Multiline for jsdoc-"@doctags"
+ *
+ * @type {Function}
+ */
+var fn;
+
+fn = function() {
+  return 1;
+};
+\
+`;
+  return eq(CoffeeScript.compile(input, {bare: true}), result);
+});
+
+// Although adequately working, block comment-placement is not yet perfect.
+// (Considering a case where multiple variables have been declared …)
+test("#3132: Format hand-made (raw) jsdoc-style block-comment nicely", function() {
+  const input = `\
+###*
+ * Multiline for jsdoc-"@doctags"
+ *
+ * @type {Function}
+###
+fn = () -> 1\
+`;
+
+  const result = `\
+
+/**
+ * Multiline for jsdoc-"@doctags"
+ *
+ * @type {Function}
+ */
+var fn;
+
+fn = function() {
+  return 1;
+};
+\
+`;
+  return eq(CoffeeScript.compile(input, {bare: true}), result);
+});
+
+// Although adequately working, block comment-placement is not yet perfect.
+// (Considering a case where multiple variables have been declared …)
+test("#3132: Place block-comments nicely", function() {
+  const input = `\
+###*
+# A dummy class definition
+#
+# @class
+###
+class DummyClass
+
+  ###*
+  # @constructor
+  ###
+  constructor: ->
+
+  ###*
+  # Singleton reference
+  #
+  # @type {DummyClass}
+  ###
+  @instance = new DummyClass()
+\
+`;
+
+  const result = `\
+
+/**
+ * A dummy class definition
+ *
+ * @class
+ */
+var DummyClass;
+
+DummyClass = (function() {
+
+  /**
+   * @constructor
+   */
+  function DummyClass() {}
+
+
+  /**
+   * Singleton reference
+   *
+   * @type {DummyClass}
    */
 
+  DummyClass.instance = new DummyClass();
 
-  """
+  return DummyClass;
 
-  eq CoffeeScript.compile(input, bare: on), result
+})();
+\
+`;
+  return eq(CoffeeScript.compile(input, {bare: true}), result);
+});
 
-test "#3761: Multiline comment at end of an object", ->
-  anObject =
+test("#3638: Demand a whitespace after # symbol", function() {
+  const input = `\
+###
+#No
+#whitespace
+###`;
+
+  const result = `\
+
+/*
+#No
+#whitespace
+ */
+
+\
+`;
+
+  return eq(CoffeeScript.compile(input, {bare: true}), result);
+});
+
+test("#3761: Multiline comment at end of an object", function() {
+  const anObject = {
     x: 3
-    ###
-    #Comment
-    ###
+    /*
+     *Comment
+     */
+  };
 
-  ok anObject.x is 3
+  return ok(anObject.x === 3);
+});
 
-test "#4375: UTF-8 characters in comments", ->
-  # 智に働けば角が立つ、情に掉させば流される。
-  ok yes
+test("#4375: UTF-8 characters in comments", () => // 智に働けば角が立つ、情に掉させば流される。
+ok(true));
